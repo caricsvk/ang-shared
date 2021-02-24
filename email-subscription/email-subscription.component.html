@@ -1,0 +1,23 @@
+<h2>{{title}}</h2>
+
+<form *ngIf="!savingResponse" (ngSubmit)="subscribe()">
+  <mat-form-field>
+    <input matInput [(ngModel)]="user.email" placeholder="Email" [formControl]="emailFormControl">
+    <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+      Please enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="emailFormControl.hasError('required')">
+      Email is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <button mat-stroked-button color="primary">
+    <span *ngIf="!isSavingInProgress">{{buttonText}}</span>
+    <mat-spinner *ngIf="isSavingInProgress" style="margin: auto" [strokeWidth]="2" [diameter]="20"></mat-spinner>
+  </button>
+</form>
+
+<p class="response" *ngIf="savingResponse">
+  {{savingResponse}}
+</p>
+
+<p>{{bottomText}}</p>

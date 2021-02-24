@@ -1,0 +1,17 @@
+<div class="button-wrapper left" (click)="scrollLeft()">
+  <button mat-icon-button type="button">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+</div>
+
+<div class="button-wrapper right" (click)="scrollRight()">
+  <button mat-icon-button type="button">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</div>
+
+<div class="scroll-wrapper">
+  <div #scrollableElement class="scrollable-element" fxLayout="row" fxLayoutAlign="start center">
+    <ng-content ></ng-content>
+  </div>
+</div>
