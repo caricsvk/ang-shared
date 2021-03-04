@@ -12,13 +12,15 @@ export abstract class AppRoute {
 
   abstract getAllOutlets(): string[];
 
-  clearThisRouteOutlet(): Promise<boolean> {
+  clearThisRouteOutlet(extras?: NavigationExtras): Promise<boolean> {
+    extras = extras || {};
+    extras.replaceUrl = true;
     if (! this.outlet) {
       throw Error('this route is main route, cannot be cleared');
     }
     const outlets = this.getOutlets(false);
     outlets[this.outlet] = null;
-    return this.router.navigate([{outlets}], {replaceUrl: true});
+    return this.router.navigate([{outlets}], extras);
   }
 
   async navigate(clearOtherOutlets = false): Promise<boolean> {
