@@ -5,8 +5,9 @@ import {
   ElementRef,
   HostBinding,
   Input,
-  OnInit,
-  ViewChild
+  OnInit, Output,
+  ViewChild,
+  EventEmitter
 } from '@angular/core';
 
 @Component({
@@ -18,6 +19,7 @@ export class HorizontalScrollComponent implements OnInit, AfterViewInit {
 
   @Input() offset = 50;
   @Input() center = false;
+  @Output() scrolled = new EventEmitter<number>();
   @HostBinding('class') showScrollers: string | undefined;
   @ViewChild('scrollableElement', {read: ElementRef})
   private scrollableElement: ElementRef;
@@ -46,6 +48,7 @@ export class HorizontalScrollComponent implements OnInit, AfterViewInit {
     const children = scrollElement.children;
     const offset = (this.wrapperWidth - this.offset) * (next ? 1 : -1);
     let scrollTo = scrollElement.scrollLeft + offset;
+    this.scrolled.emit(scrollTo);
     if (this.center) {
       const center = scrollElement.scrollLeft + this.wrapperWidth / 2;
       let lastElementEnd = 0;
@@ -70,7 +73,6 @@ export class HorizontalScrollComponent implements OnInit, AfterViewInit {
       left: scrollTo,
       behavior: 'smooth'
     });
-
   }
 
 }
