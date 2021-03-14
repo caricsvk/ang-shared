@@ -7,12 +7,13 @@
       display: inline-block;
     }
     .scroll-wrapper ::ng-deep > * {
-      overflow: auto;
+      //overflow: auto;
       margin-bottom: -15px;
     }
   }
   &.shown-scrollers .scroll-wrapper ::ng-deep > * {
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .scroll-wrapper {
