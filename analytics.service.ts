@@ -62,11 +62,11 @@ export class AnalyticsService {
       const meta = document.getElementsByTagName('meta');
       for (let i = 0; i < meta.length; i ++) {
         if (meta.item(i).name === 'description') {
-          meta.item(i).innerHTML = route && route.data.description ?
+          meta.item(i).content = route && route.data.description ?
             route.data.description : defaultData.description;
         }
         if (meta.item(i).name === 'keywords') {
-          meta.item(i).innerHTML = route && route.data.keywords ?
+          meta.item(i).content = route && route.data.keywords ?
             route.data.keywords : defaultData.keywords;
         }
       }
