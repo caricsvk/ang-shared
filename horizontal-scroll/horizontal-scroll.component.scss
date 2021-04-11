@@ -2,16 +2,16 @@
   position: relative;
   display: block;
 
-  &.shown-scrollers {
+  &.shown-scroll {
     .button-wrapper {
       display: inline-block;
     }
-    .scroll-wrapper ::ng-deep > * {
+    .scroll-wrapper > * {
       //overflow: auto;
       margin-bottom: -15px;
     }
   }
-  &.shown-scrollers .scroll-wrapper ::ng-deep > * {
+  &.shown-scroll .scroll-wrapper ::ng-deep > * {
     overflow-x: auto;
     overflow-y: hidden;
   }

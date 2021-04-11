@@ -7,7 +7,7 @@ import {
   Input,
   OnInit, Output,
   ViewChild,
-  EventEmitter
+  EventEmitter, OnChanges, SimpleChanges
 } from '@angular/core';
 
 @Component({
@@ -15,32 +15,46 @@ import {
   templateUrl: './horizontal-scroll.component.html',
   styleUrls: ['./horizontal-scroll.component.scss']
 })
-export class HorizontalScrollComponent implements OnInit, AfterViewInit {
+export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewInit {
 
+  @Input() shownScroll;
   @Input() offset = 50;
   @Input() center = false;
   @Output() scrolled = new EventEmitter<number>();
-  @HostBinding('class') showScrollers: string | undefined;
+
   @ViewChild('scrollableElement', {read: ElementRef})
+
   private scrollableElement: ElementRef;
   private wrapperWidth: number;
 
   constructor(
     private hostElement: ElementRef,
-    private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+  }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
     this.wrapperWidth = this.hostElement.nativeElement.offsetWidth;
-    const interval = setInterval(() => {
-      this.showScrollers = this.wrapperWidth < this.scrollableElement.nativeElement.scrollWidth ?
-        'shown-scrollers' : 'hidden-scrollers';
-      this.changeDetectorRef.detectChanges();
-    }, 500);
-    setTimeout(() => clearInterval(interval), 10 * 1000);
+    const classList = this.hostElement.nativeElement.classList;
+    if (this.shownScroll) {
+      classList.add('shown-scroll');
+    } else if (this.shownScroll === false) {
+      classList.remove('shown-scroll');
+    } else {
+      const interval = setInterval(() => {
+        const shownScroll = this.wrapperWidth < this.scrollableElement.nativeElement.scrollWidth;
+        if (this.shownScroll != shownScroll) {
+          classList.toggle('shown-scroll');
+          this.shownScroll = shownScroll;
+        }
+      }, 500);
+      setTimeout(() => clearInterval(interval), 1510);
+    }
   }
 
   scroll(next: boolean): void {
