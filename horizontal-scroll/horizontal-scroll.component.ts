@@ -17,7 +17,7 @@ import {
 })
 export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @Input() shownScroll;
+  @Input() shownScroll: boolean;
   @Input() offset = 50;
   @Input() center = false;
   @Output() scrolled = new EventEmitter<number>();
