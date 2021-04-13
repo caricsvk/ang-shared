@@ -23,7 +23,6 @@ export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewIn
   @Output() scrolled = new EventEmitter<number>();
 
   @ViewChild('scrollableElement', {read: ElementRef})
-
   private scrollableElement: ElementRef;
   private wrapperWidth: number;
 

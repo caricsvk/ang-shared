@@ -15,42 +15,41 @@
     overflow-x: auto;
     overflow-y: hidden;
   }
+}
 
-  .scroll-wrapper {
+.scroll-wrapper {
+  overflow: hidden;
+  display: block;
+  ::ng-deep > * {
+    width: 100%;
     overflow: hidden;
-    display: block;
-    ::ng-deep > * {
-      width: 100%;
-      overflow: hidden;
-    }
+  }
+}
+
+.button-wrapper {
+  display: none;
+  opacity: 1;
+  position: absolute;
+  top: calc(50% - 20px);
+  width: auto;
+  padding-right: 1.5em;
+
+  &.left {
+    left: -2.5em;
+    z-index: 2;
   }
 
-  .button-wrapper {
-    display: none;
-    opacity: 1;
-    position: absolute;
-    top: calc(50% - 20px);
-    width: auto;
-    padding-right: 1.5em;
+  &.right {
+    right: 0;
+    z-index: 2;
+    padding-right: 0.2rem;
+  }
 
-    &.left {
-      left: -2.5em;
-      z-index: 2;
+  button {
+    top: calc(50% - 2em);
+    mat-icon {
+      font-size: 50px;
     }
-
-    &.right {
-      right: 0;
-      z-index: 2;
-      padding-right: 0.2rem;
-    }
-
-    button {
-      top: calc(50% - 2em);
-      mat-icon {
-        font-size: 50px;
-      }
-    }
-
   }
 
 }
