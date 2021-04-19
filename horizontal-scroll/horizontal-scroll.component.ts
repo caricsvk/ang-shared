@@ -59,18 +59,19 @@ export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewIn
   scroll(next: boolean): void {
     const scrollElement = this.scrollableElement.nativeElement;
     const children = scrollElement.children;
-    const offset = (this.wrapperWidth - this.offset) * (next ? 1 : -1);
+    const wrapperWidth = this.hostElement.nativeElement.offsetWidth;
+    const offset = (wrapperWidth - this.offset) * (next ? 1 : -1);
     let scrollTo = scrollElement.scrollLeft + offset;
     this.scrolled.emit(scrollTo);
     if (this.center) {
-      const center = scrollElement.scrollLeft + this.wrapperWidth / 2;
-      const wrapperWidth = this.hostElement.nativeElement.offsetWidth;
+      const center = scrollElement.scrollLeft + wrapperWidth / 2;
       let centerElementIndex = -1
       while (
         ++ centerElementIndex < children.length &&
         (children[centerElementIndex].offsetLeft + children[centerElementIndex].offsetWidth) <= center
       ) { }
       const centerElementEnd = children[centerElementIndex].offsetLeft + children[centerElementIndex].offsetWidth;
+      // console.log('center', center, children[centerElementIndex].offsetLeft, '+', children[centerElementIndex].offsetWidth);
       if (next && children[centerElementIndex + 1]) {
         scrollTo = centerElementEnd + children[centerElementIndex + 1].offsetWidth / 2 - wrapperWidth / 2;
       } else if (! next && centerElementIndex > 0) {
