@@ -64,6 +64,7 @@ export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewIn
     this.scrolled.emit(scrollTo);
     if (this.center) {
       const center = scrollElement.scrollLeft + this.wrapperWidth / 2;
+      const wrapperWidth = this.hostElement.nativeElement.offsetWidth;
       let centerElementIndex = -1
       while (
         ++ centerElementIndex < children.length &&
@@ -71,9 +72,9 @@ export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewIn
       ) { }
       const centerElementEnd = children[centerElementIndex].offsetLeft + children[centerElementIndex].offsetWidth;
       if (next && children[centerElementIndex + 1]) {
-        scrollTo = centerElementEnd + children[centerElementIndex + 1].offsetWidth / 2 - this.wrapperWidth / 2;
+        scrollTo = centerElementEnd + children[centerElementIndex + 1].offsetWidth / 2 - wrapperWidth / 2;
       } else if (! next && centerElementIndex > 0) {
-        scrollTo = children[centerElementIndex].offsetLeft - children[centerElementIndex - 1].offsetWidth / 2 - this.wrapperWidth / 2;
+        scrollTo = children[centerElementIndex].offsetLeft - children[centerElementIndex - 1].offsetWidth / 2 - wrapperWidth / 2;
       }
     }
     if (scrollTo < 0) {
