@@ -9,6 +9,8 @@ import {
   ViewChild,
   EventEmitter, OnChanges, SimpleChanges
 } from '@angular/core';
+import { asyncScheduler, fromEvent } from 'rxjs';
+import { throttle, throttleTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-horizontal-scroll',
@@ -25,6 +27,7 @@ export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewIn
   @ViewChild('scrollableElement', {read: ElementRef})
   private scrollableElement: ElementRef;
   private wrapperWidth: number;
+  private lastScrollLeft = 0;
 
   constructor(
     private hostElement: ElementRef,
@@ -54,6 +57,13 @@ export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewIn
       }, 500);
       setTimeout(() => clearInterval(interval), 1510);
     }
+
+    fromEvent(this.scrollableElement.nativeElement, 'scroll').pipe(
+      throttleTime(500, asyncScheduler, {leading: true, trailing: true})
+    ).subscribe(() => {
+      this.lastScrollLeft = this.scrollableElement.nativeElement.scrollLeft;
+      this.scrolled.emit(this.lastScrollLeft);
+    });
   }
 
   scroll(next: boolean): void {
