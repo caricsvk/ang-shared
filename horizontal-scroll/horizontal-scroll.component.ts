@@ -7,63 +7,85 @@ import {
   Input,
   OnInit, Output,
   ViewChild,
-  EventEmitter
+  EventEmitter, OnChanges, SimpleChanges
 } from '@angular/core';
+import { asyncScheduler, fromEvent } from 'rxjs';
+import { throttle, throttleTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-horizontal-scroll',
   templateUrl: './horizontal-scroll.component.html',
   styleUrls: ['./horizontal-scroll.component.scss']
 })
-export class HorizontalScrollComponent implements OnInit, AfterViewInit {
+export class HorizontalScrollComponent implements OnInit, OnChanges, AfterViewInit {
 
+  @Input() shownScroll: boolean;
   @Input() offset = 50;
   @Input() center = false;
   @Output() scrolled = new EventEmitter<number>();
-  @HostBinding('class') showScrollers: string | undefined;
+
   @ViewChild('scrollableElement', {read: ElementRef})
   private scrollableElement: ElementRef;
   private wrapperWidth: number;
+  private lastScrollLeft = 0;
 
   constructor(
     private hostElement: ElementRef,
-    private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+  }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
     this.wrapperWidth = this.hostElement.nativeElement.offsetWidth;
-    const interval = setInterval(() => {
-      this.showScrollers = this.wrapperWidth < this.scrollableElement.nativeElement.scrollWidth ?
-        'shown-scrollers' : 'hidden-scrollers';
-      this.changeDetectorRef.detectChanges();
-    }, 500);
-    setTimeout(() => clearInterval(interval), 10 * 1000);
+    const classList = this.hostElement.nativeElement.classList;
+    if (this.shownScroll) {
+      classList.add('shown-scroll');
+    } else if (this.shownScroll === false) {
+      classList.remove('shown-scroll');
+    } else {
+      const interval = setInterval(() => {
+        const shownScroll = this.wrapperWidth < this.scrollableElement.nativeElement.scrollWidth;
+        if (this.shownScroll != shownScroll) {
+          classList.toggle('shown-scroll');
+          this.shownScroll = shownScroll;
+        }
+      }, 500);
+      setTimeout(() => clearInterval(interval), 1510);
+    }
+
+    fromEvent(this.scrollableElement.nativeElement, 'scroll').pipe(
+      throttleTime(500, asyncScheduler, {leading: true, trailing: true})
+    ).subscribe(() => {
+      this.lastScrollLeft = this.scrollableElement.nativeElement.scrollLeft;
+      this.scrolled.emit(this.lastScrollLeft);
+    });
   }
 
   scroll(next: boolean): void {
     const scrollElement = this.scrollableElement.nativeElement;
     const children = scrollElement.children;
-    const offset = (this.wrapperWidth - this.offset) * (next ? 1 : -1);
+    const wrapperWidth = this.hostElement.nativeElement.offsetWidth;
+    const offset = (wrapperWidth - this.offset) * (next ? 1 : -1);
     let scrollTo = scrollElement.scrollLeft + offset;
     this.scrolled.emit(scrollTo);
     if (this.center) {
-      const center = scrollElement.scrollLeft + this.wrapperWidth / 2;
-      let lastElementEnd = 0;
-      let i = 0
-      for (; i < children.length; i++) {
-        lastElementEnd += children[i].clientWidth + this.offset;
-        if (lastElementEnd >= center) {
-          break;
-        }
-      }
-      try {
-        scrollTo = next ? lastElementEnd + children[i + 1].clientWidth / 2 - this.wrapperWidth / 2 :
-          lastElementEnd - children[i - 1].clientWidth - children[i - 1].clientWidth / 2 - this.wrapperWidth / 2;
-      } catch (e) { // children index out of bound
-        return;
+      const center = scrollElement.scrollLeft + wrapperWidth / 2;
+      let centerElementIndex = -1
+      while (
+        ++ centerElementIndex < children.length &&
+        (children[centerElementIndex].offsetLeft + children[centerElementIndex].offsetWidth) <= center
+      ) { }
+      const centerElementEnd = children[centerElementIndex].offsetLeft + children[centerElementIndex].offsetWidth;
+      // console.log('center', center, children[centerElementIndex].offsetLeft, '+', children[centerElementIndex].offsetWidth);
+      if (next && children[centerElementIndex + 1]) {
+        scrollTo = centerElementEnd + children[centerElementIndex + 1].offsetWidth / 2 - wrapperWidth / 2;
+      } else if (! next && centerElementIndex > 0) {
+        scrollTo = children[centerElementIndex].offsetLeft - children[centerElementIndex - 1].offsetWidth / 2 - wrapperWidth / 2;
       }
     }
     if (scrollTo < 0) {

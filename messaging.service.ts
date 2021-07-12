@@ -23,6 +23,9 @@ export class MessagingService {
     return this.dialog.open(component, {
       width: '90%',
       maxWidth: '800px',
+      minHeight: '400px',
+      maxHeight: '94%',
+      panelClass: 'relto-overlay-pane',
       data
     });
   }

@@ -30,7 +30,8 @@ export abstract class AppRoute {
       if (url.includes(this.outlet + ':') && outlets[this.outlet]) {
         const existingOutletNewValue = outlets[this.outlet];
         outlets[this.outlet] = null;
-        await this.router.navigate([{outlets}], {replaceUrl: true});
+        this.extras.replaceUrl = true;
+        await this.router.navigate([{outlets}], this.extras);
         outlets[this.outlet] = existingOutletNewValue;
       }
     }

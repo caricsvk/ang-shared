@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AppHelper } from './app-helper';
-import { RoutePath, RoutesPaths } from '../routes';
 
 // import { AppHelper } from "../app-helper";
 
@@ -52,32 +51,32 @@ export class AnalyticsService {
     }, 1000);
   }
 
-  setSeoTags(route: RoutePath, latestUrlPath: string): void {
-    // console.log('setSeoTags route', route);
-    const defaultData = RoutesPaths.Home.data;
-    setTimeout(() => {
-      const h1s = document.getElementsByTagName('h1');
-      const alternateTitle = route && h1s.length ? h1s[0].textContent : defaultData.title;
-      document.getElementsByTagName('title')[0].innerHTML = (route && route.data.title ? route.data.title : alternateTitle);
-      const meta = document.getElementsByTagName('meta');
-      for (let i = 0; i < meta.length; i ++) {
-        if (meta.item(i).name === 'description') {
-          meta.item(i).content = route && route.data.description ?
-            route.data.description : defaultData.description;
-        }
-        if (meta.item(i).name === 'keywords') {
-          meta.item(i).content = route && route.data.keywords ?
-            route.data.keywords : defaultData.keywords;
-        }
-      }
-      const link = document.getElementsByTagName('link');
-      for (let i = 0; i < link.length; i ++) {
-        if (link.item(i).rel === 'canonical') {
-          link.item(i).href = window.location.protocol + '//' + window.location.hostname + latestUrlPath;
-        }
-      }
-    }, 500); // gives time to render content to acquire h1
-  }
+  // setSeoTags(route: RoutePath, latestUrlPath: string): void {
+  //   // console.log('setSeoTags route', route);
+  //   const defaultData = RoutesPaths.Home.data;
+  //   setTimeout(() => {
+  //     const h1s = document.getElementsByTagName('h1');
+  //     const alternateTitle = route && h1s.length ? h1s[0].textContent : defaultData.title;
+  //     document.getElementsByTagName('title')[0].innerHTML = (route && route.data.title ? route.data.title : alternateTitle);
+  //     const meta = document.getElementsByTagName('meta');
+  //     for (let i = 0; i < meta.length; i ++) {
+  //       if (meta.item(i).name === 'description') {
+  //         meta.item(i).content = route && route.data.description ?
+  //           route.data.description : defaultData.description;
+  //       }
+  //       if (meta.item(i).name === 'keywords') {
+  //         meta.item(i).content = route && route.data.keywords ?
+  //           route.data.keywords : defaultData.keywords;
+  //       }
+  //     }
+  //     const link = document.getElementsByTagName('link');
+  //     for (let i = 0; i < link.length; i ++) {
+  //       if (link.item(i).rel === 'canonical') {
+  //         link.item(i).href = window.location.protocol + '//' + window.location.hostname + latestUrlPath;
+  //       }
+  //     }
+  //   }, 500); // gives time to render content to acquire h1
+  // }
 
   private getWindowProperty(property: string): () => {} {
     // @ts-ignore

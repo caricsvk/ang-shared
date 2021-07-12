@@ -1,26 +1,16 @@
-import { Observable, Subject } from 'rxjs';
-
 export class DomHelper {
 
   private static scrollbarWidth: number;
 
-  static scrollTo(element: HTMLElement, offset: number, duration: number): Observable<unknown> {
-    const start = element.scrollTop;
-    const change = offset - start;
-    const increment = 20;
-    let currentTime = 0;
-    const subject = new Subject();
-    const animateScroll = () => {
-      currentTime += increment;
-      element.scrollTop = DomHelper.easeInOutQuad(currentTime, start, change, duration);
-      if (currentTime < duration) {
-        setTimeout(animateScroll, increment);
-      } else {
-        subject.complete();
-      }
-    };
-    animateScroll();
-    return subject.asObservable();
+  static scrollTo(element: HTMLElement, offset: number): void {
+    const bodyRect = document.body.getBoundingClientRect().top;
+    const elementRect = element.getBoundingClientRect().top;
+    const elementPosition = elementRect - bodyRect;
+    const offsetPosition = elementPosition - offset;
+    window.scroll({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
   }
 
   static isElementInViewport(element: HTMLElement, fully = true): boolean {

@@ -24,6 +24,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSelectModule } from '@angular/material/select';
 import { ResizableDirective } from './resizable.directive';
+import { DialogCloseComponent } from './dialog-close/dialog-close.component';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import { ResizableDirective } from './resizable.directive';
     MatSnackBarModule,
     MatTooltipModule,
     EmailSubscriptionComponent,
+    DialogCloseComponent,
     ResizableDirective
   ],
   declarations: [
@@ -80,6 +82,7 @@ import { ResizableDirective } from './resizable.directive';
     HorizontalScrollComponent,
     LoadingMaskComponent,
     EmailSubscriptionComponent,
+    DialogCloseComponent,
     ResizableDirective
   ]
 })
