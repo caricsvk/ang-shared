@@ -15,6 +15,7 @@ export class ResizableDirective implements OnInit {
   @Output() action = new EventEmitter<ResizableAction>();
   @Output() dragged = new EventEmitter<{x: number, y: number}>();
 
+  private start: Date = null;
   private resizing = false;
   private resizingVertical: null | 'top' | 'bottom' = null;
   private resizingHorizontal: null | 'left' | 'right' = null;
@@ -56,6 +57,7 @@ export class ResizableDirective implements OnInit {
     }
 
     const onClickStart = (event: MouseEvent, endEvent: 'mouseup' | 'touchend') => {
+      this.start = new Date();
       if (this.mouseUpTouchLock) {
         // console.log('mouseUpTouchLock works!!!!');
         return false;
@@ -180,6 +182,16 @@ export class ResizableDirective implements OnInit {
       } else {
         this.clicked.emit(event);
       }
+
+      const mousedownTime = new Date().getTime() - this.start.getTime();
+      const tooFastForDragOrResize = mousedownTime < 200;
+      // console.log('tooFastForDrag', tooFastForDragOrResize, mousedownTime);
+      if (tooFastForDragOrResize) {
+        setTimeout(() => this.action.emit(ResizableAction.Initialized), 10);
+        setTimeout(() => this.action.emit(null), 20);
+        setTimeout(() => this.clicked.emit(event), 30);
+      }
+
       nativeEl.style.transform = '';
 
       document.removeEventListener('mousemove', onMouseMove, true);
