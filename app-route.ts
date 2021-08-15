@@ -36,7 +36,8 @@ export abstract class AppRoute {
       }
     }
     // console.log('navigating...', [{outlets}], this.extras);
-    return this.router.navigate([{outlets}], this.extras);
+    const commands = !clearOtherOutlets && this.navigationParts && this.navigationParts.length === 0 ? [] : [{outlets}];
+    return this.router.navigate(commands, this.extras);
   }
 
   getOutlets(clearOtherOutlets: boolean): {[key: string]: Array<string | number>} {
