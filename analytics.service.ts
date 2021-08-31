@@ -46,7 +46,7 @@ export class AnalyticsService {
       if (this.trackingTurnedOn) {
         this.gtag('event', eventName, params);
       } else {
-        console.log('sendEvent', eventName, params);
+        // console.log('sendEvent', eventName, params);
       }
     }, 1000);
   }

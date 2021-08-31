@@ -18,11 +18,12 @@ export class DomHelper {
       return false;
     }
     const rect = element.getBoundingClientRect();
-    const top = rect.top >= 0;
-    const left = rect.left >= 0;
+    const top = rect.top >= 0 && rect.top < window.innerHeight;
+    const left = rect.left >= 0 && rect.left < window.innerWidth;
     const bottom = rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
     const right = rect.right <= (window.innerWidth || document.documentElement.clientWidth);
-    return fully ? top && left && bottom && right : top && left;
+    // console.log('isElementInViewport --------', rect, top, left, bottom, right);
+    return fully ? top && left && bottom && right : (top && left) || (bottom && right);
   }
 
   static getScrollbarWidth(): number {
