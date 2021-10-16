@@ -6,6 +6,7 @@
       <input *ngIf="customValue.getType() === 'checkbox'" type="checkbox" [(ngModel)]="customValue.value" />
       {{customValue.label}}
     </label>
+    <input *ngIf="customValue.getType() === 'text'" type="text" [(ngModel)]="customValue.value" />
   </div>
 </div>
 <div class="actions">
