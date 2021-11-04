@@ -5,8 +5,9 @@ export abstract class AppRoute {
   constructor(
     private router: Router,
     private outlet: string,
-    private navigationParts: Array<string | number>,
-    private extras: NavigationExtras = {}
+    private navigationParts: any[],
+    private extras: NavigationExtras = {},
+    private forceOutletsClearing = false
   ) {
   }
 
@@ -42,7 +43,7 @@ export abstract class AppRoute {
 
   getOutlets(clearOtherOutlets: boolean): {[key: string]: Array<string | number>} {
     const outlets: {[key: string]: Array<string | number>} = {};
-    if (clearOtherOutlets) {
+    if (clearOtherOutlets || this.forceOutletsClearing) {
       // if (! outlets['primary']) {
       //   outlets['primary'] = null;
       // }
