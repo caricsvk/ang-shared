@@ -12,14 +12,14 @@ export class ResizableDirective implements OnInit {
   @Output() resized = new EventEmitter<Resize>();
   @Output() dropped = new EventEmitter<DragAndDrop>();
   @Output() clicked = new EventEmitter<Event>();
-  @Output() action = new EventEmitter<ResizableAction>();
+  @Output() action = new EventEmitter<ResizableAction | null>();
   @Output() dragged = new EventEmitter<{x: number, y: number}>();
 
-  private start: Date = null;
+  private start: Date = new Date();
   private resizing = false;
   private resizingVertical: null | 'top' | 'bottom' = null;
   private resizingHorizontal: null | 'left' | 'right' = null;
-  private dragging: boolean;
+  private dragging: boolean | undefined;
 
   private initialParams: InitialParams;
 
@@ -238,7 +238,7 @@ export class ResizableDirective implements OnInit {
     const top = clientY + horizontalScrollOffset - element.offsetTop < this.resizableGrabWidth;
     const bottom = element.clientHeight - (clientY + horizontalScrollOffset) + element.offsetTop < this.resizableGrabWidth;
     this.resizingVertical = top ? 'top' : bottom ? 'bottom' : null;
-    return this.resizingHorizontal || this.resizingVertical;
+    return !!this.resizingHorizontal || !!this.resizingVertical;
   }
 
 }

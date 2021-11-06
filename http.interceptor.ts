@@ -37,7 +37,7 @@ export class MiloHttpInterceptor implements HttpInterceptor {
   }
 
   terminatePendingRequests(): void {
-    this.terminateRequestsSubject.next();
+    this.terminateRequestsSubject.next(null);
   }
 
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
