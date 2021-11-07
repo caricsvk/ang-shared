@@ -1,0 +1,63 @@
+<form class="milo-table-form ui form" (ngSubmit)="filterResults()">
+<!--  class="mat-elevation-z8"-->
+
+  <mat-table [dataSource]="dataSource$">
+
+    <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
+      <mat-header-cell *matHeaderCellDef [className]="column.key + ' type' + column.type">
+        <div>
+          <span (click)="changeSort(column)">
+            {{column.name}}
+            <mat-icon *ngIf="column.key == state.order && state.orderType == 'ASC'">south</mat-icon>
+            <mat-icon *ngIf="column.key == state.order && state.orderType == 'DESC'">north</mat-icon>
+          </span>
+          <milo-filter *ngIf="showFilters" [column]="column"
+                       [value]="state.deserializeColumnValue(column)" (valueChanged)="changeFilter(column, $event)">
+          </milo-filter>
+          </div>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row" [className]="column.key + ' type' + column.type">
+        {{column.view ? column.view(row) : view(column, row)}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="last">
+      <mat-header-cell *matHeaderCellDef>
+        <div style="text-align: right;">
+          <button type="button" (click)="showFilters=!showFilters" mat-flat-button class="filter-btn">
+            <mat-icon>filter_alt</mat-icon> {{rowsTotalCount}}
+          </button>
+          <div *ngIf="showFilters" style="margin-top: 0.2rem;">
+            <button class="ui icon fluid button" mat-flat-button color="primary" >
+              <i class="search icon"></i> search
+            </button>
+          </div>
+        </div>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <ng-container *ngFor="let action of actions">
+          <button (click)="action.trigger(row)"
+                  type="button" [ngClass]="action.name" mat-stroked-button
+                  [ngStyle]="{'display': action.show(row) ? 'inline-block' : 'none', visibility: row ? 'visible': 'hidden'}">
+            <mat-icon *ngIf="action.icon">{{action.icon}}</mat-icon>
+            {{action.name}}
+          </button>
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]"
+                 [pageIndex]="state.page - 1" [pageSize]="state.pageSize" [length]="rowsTotalCount"
+                 (page)="processPageEvent($event)">
+  </mat-paginator>
+
+  <button mat-icon-button type="button" class="refresh-btn" (click)="fetch(state)">
+    <mat-icon>refresh</mat-icon>
+  </button>
+
+</form>

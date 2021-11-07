@@ -1,0 +1,62 @@
+<div [ngSwitch]="column.type">
+
+	<div class="empty-handler">
+		<mat-icon [color]="emptyFilter === false ? 'primary' : undefined"
+		          (click)="emitChange({type: FilterType.EMPTY, value: false})">
+			radio_button_checked
+		</mat-icon>
+		<mat-icon [color]="emptyFilter === true ? 'primary' : undefined"
+		          (click)="emitChange({type: FilterType.EMPTY, value: true})">
+			radio_button_unchecked
+		</mat-icon>
+		<mat-icon (click)="emitChange({value: undefined})">clear</mat-icon>
+	</div>
+
+	<div *ngSwitchDefault>
+    <mat-form-field>
+      <input matInput [name]="column.key" type="text" [placeholder]="column.name"
+             [ngModel]="value" (ngModelChange)="emitChange({type: FilterType.WILDCARD, value: $event})"/>
+    </mat-form-field>
+	</div>
+
+	<div *ngSwitchCase="ColumnType.Number" class="two">
+		<mat-form-field>
+			<input matInput [name]="column.key + 'min'" type="number" placeholder="Min"
+			       [ngModel]="value.min" (ngModelChange)="emitChange({type: FilterType.MIN, value: $event})"/>
+		</mat-form-field>
+		<mat-form-field>
+			<input matInput [name]="column.key + 'max'" type="number" placeholder="Max"
+			       [ngModel]="value.max" (ngModelChange)="emitChange({type: FilterType.MAX, value: $event})"/>
+		</mat-form-field>
+	</div>
+
+	<div *ngSwitchCase="ColumnType.Datetime" class="two">
+		<mat-form-field>
+			<mat-label>From</mat-label>
+			<input matInput [matDatepicker]="picker" [value]="value.min"
+			       (dateChange)="emitChange({type: FilterType.MIN, value: $event.value.getTime()})">
+			<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+			<mat-datepicker #picker></mat-datepicker>
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label>To</mat-label>
+			<input matInput [matDatepicker]="picker2" [value]="value.max"
+			       (dateChange)="emitChange({type: FilterType.MAX, value: $event.value.getTime()})">
+			<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+			<mat-datepicker #picker2></mat-datepicker>
+		</mat-form-field>
+	</div>
+
+	<mat-form-field *ngSwitchCase="ColumnType.Boolean" class="boolean-handler">
+		<mat-select [ngModel]="value === null ? 'null' : value" [placeholder]="column.name"
+		            (ngModelChange)="emitChange({type: FilterType.EXACT, value: $event})">
+			<mat-option [value]="'true'">true</mat-option>
+			<mat-option [value]="'false'">false</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<div *ngSwitchCase="ColumnType.Select">
+<!--		<milo-select [model]="value" [options]="column.values" (onChange)="emitChange($event)"></milo-select>-->
+	</div>
+
+</div>

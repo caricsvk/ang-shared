@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { LoadingMaskComponent } from './loading-mask/loading-mask.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -25,6 +25,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSelectModule } from '@angular/material/select';
 import { ResizableDirective } from './resizable.directive';
 import { DialogCloseComponent } from './dialog-close/dialog-close.component';
+import { TableComponent } from './table/table.component';
+import { FilterComponent } from './filter/filter.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   imports: [
@@ -49,6 +54,9 @@ import { DialogCloseComponent } from './dialog-close/dialog-close.component';
     MatMenuModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatDatepickerModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   exports: [
     HttpClientModule,
@@ -73,7 +81,12 @@ import { DialogCloseComponent } from './dialog-close/dialog-close.component';
     MatMenuModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatDatepickerModule,
+    MatTableModule,
+    MatPaginatorModule,
     EmailSubscriptionComponent,
+    TableComponent,
+    FilterComponent,
     DialogCloseComponent,
     ResizableDirective
   ],
@@ -82,8 +95,14 @@ import { DialogCloseComponent } from './dialog-close/dialog-close.component';
     HorizontalScrollComponent,
     LoadingMaskComponent,
     EmailSubscriptionComponent,
+    TableComponent,
+    FilterComponent,
     DialogCloseComponent,
     ResizableDirective
+  ],
+  providers: [
+    DatePipe,
+    DecimalPipe
   ]
 })
 export class SharedModule { }

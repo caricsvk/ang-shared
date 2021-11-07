@@ -1,0 +1,81 @@
+form {
+  position: relative;
+  .refresh-btn {
+    position: absolute;
+    right: 1rem;
+    margin-top: -3rem;
+  }
+}
+
+::ng-deep milo-table mat-table {
+  width: 100%;
+  display: block;
+
+  mat-header-row, mat-row {
+    flex-wrap: wrap;
+    milo-filter {
+      width: 100%;
+      display: block;
+    }
+  }
+
+  mat-cell button {
+    border-radius: 0 !important;
+  }
+
+  mat-header-cell, mat-cell {
+    margin-right: 1rem !important;
+    line-break: anywhere;
+    min-width: 50px;
+    flex-grow: 2;
+    &.type3 {
+      min-width: 90px;
+      max-width: 170px;
+      -webkit-line-break: after-white-space;
+    }
+    &:last-child {
+      min-width: 90px;
+      justify-content: flex-end;
+      padding-right: 0;
+      padding-left: 1rem;
+      flex-grow: 1;
+      button {
+        //width: auto;
+        overflow: hidden;
+      }
+    }
+  }
+
+  mat-header-cell {
+    align-self: baseline;
+    > div {
+      width: 100%;
+
+      > span {
+        cursor: pointer;
+        display: block;
+        margin: 1rem 0 0.5rem 0;
+
+        mat-icon {
+          font-size: 0.8rem !important;
+          height: 18px !important;
+          width: 18px !important;
+        }
+      }
+    }
+  }
+
+  mat-form-field {
+    min-width: 100px;
+  }
+
+  .filter-btn mat-icon {
+    font-size: 1.2rem !important;
+  }
+
+}
+
+
+::ng-deep .mat-paginator {
+  padding-right: 4rem;
+}
