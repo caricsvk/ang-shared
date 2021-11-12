@@ -1,16 +1,22 @@
-<div [ngSwitch]="column.type">
+<ng-container [ngSwitch]="column.type">
 
-	<div class="empty-handler">
-		<mat-icon [color]="emptyFilter === false ? 'primary' : undefined"
-		          (click)="emitChange({type: FilterType.EMPTY, value: false})">
-			radio_button_checked
-		</mat-icon>
-		<mat-icon [color]="emptyFilter === true ? 'primary' : undefined"
-		          (click)="emitChange({type: FilterType.EMPTY, value: true})">
-			radio_button_unchecked
-		</mat-icon>
-		<mat-icon (click)="emitChange({value: undefined})">clear</mat-icon>
-	</div>
+  <div fxLayout="row wrap" fxLayoutAlign="space-between baseline" fxLayoutGap="0.5rem">
+    <div fxFlex>
+      <ng-content></ng-content>
+    </div>
+
+    <div class="empty-handler">
+      <mat-icon [color]="emptyFilter === false ? 'primary' : undefined"
+                (click)="emitChange({type: FilterType.EMPTY, value: false})">
+        radio_button_checked
+      </mat-icon>
+      <mat-icon [color]="emptyFilter === true ? 'primary' : undefined"
+                (click)="emitChange({type: FilterType.EMPTY, value: true})">
+        radio_button_unchecked
+      </mat-icon>
+      <mat-icon (click)="emitChange({value: undefined})">clear</mat-icon>
+    </div>
+  </div>
 
 	<div *ngSwitchDefault>
     <mat-form-field>
@@ -59,4 +65,4 @@
 <!--		<milo-select [model]="value" [options]="column.values" (onChange)="emitChange($event)"></milo-select>-->
 	</div>
 
-</div>
+</ng-container>

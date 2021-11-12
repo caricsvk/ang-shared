@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TableState } from './table-state';
 import { ColumnType, TableColumn } from './table-column';
 import { TableAction } from './table-action';
@@ -7,6 +7,7 @@ import { Subject, Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { FilterChange } from '../filter/filter.component';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'milo-table',
@@ -17,6 +18,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   private dataSubscription: Subscription;
   private countSubscription: Subscription;
+  private data: any[] = [];
 
   // mandatory
   @Input() adapter: TableAdapter;
@@ -24,6 +26,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   // optional
   @Input() showFilters: boolean | null = null;
   @Input() makeEmptyRows = true;
+  @Input() selected: any[] | false = false;
+
+  @Output() selectedChange = new EventEmitter<any[]>();
 
   actions: TableAction[] | null = null;
 
@@ -34,6 +39,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   dataSource$ = new Subject<any[]>();
   displayedColumns: string[] = [];
+  selection = new SelectionModel<any>(true, []);
 
   constructor(
       private datePipe: DatePipe,
@@ -45,12 +51,17 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log('MiloTableComponent ngOnChanges');
+    // console.log('MiloTableComponent ngOnChanges', changes);
     this.columns = this.adapter.getAllColumns();
     this.displayedColumns = this.columns.map(column => column.key);
     this.displayedColumns.push('last');
-    this.actions = this.adapter.getActions();
-    this.adapter.onStateChange().subscribe(state => this.fetch(state));
+    if (this.selected) {
+      this.displayedColumns.unshift('select');
+    }
+    if (changes['adapter']) {
+      this.actions = this.adapter.getActions();
+      this.adapter.onStateChange().subscribe(state => this.fetch(state));
+    }
   }
 
   ngOnDestroy(): void {
@@ -71,10 +82,15 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.dataSubscription.unsubscribe();
     }
     this.dataSubscription = this.adapter.fetchData(this.state).subscribe((data: any[]) => {
-      for (let i = data.length; this.makeEmptyRows && i < this.state.pageSize; i++) {
+      this.data = [].concat(...data);
+      for (let i = data.length; this.state.page > 1 && this.makeEmptyRows && i < this.state.pageSize; i++) {
         data.push(null);
       }
       this.dataSource$.next(data);
+      if (this.selection.selected.length > 0) {
+        this.selectedChange.next([]);
+      }
+      this.selection.clear();
     });
 
     // set showFilters if there is some value in filters
@@ -136,6 +152,28 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     this.changePage(pageEvent.pageIndex);
   }
 
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.data.length;
+    return numSelected === numRows;
+  }
+
+  toggleAll() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.data);
+    }
+    this.updateSelection();
+  }
+
+  updateSelection(row?: any) {
+    if (row) {
+      this.selection.toggle(row);
+    }
+    this.selectedChange.next(this.selection.selected);
+  }
+
   private changePageSize(pageSize: number): void {
     if (pageSize !== this.state.pageSize) {
       this.state.page = 1;
@@ -151,4 +189,5 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.adapter.setState(this.state);
     }
   }
+
 }

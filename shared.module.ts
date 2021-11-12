@@ -30,6 +30,8 @@ import { FilterComponent } from './filter/filter.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   imports: [
@@ -56,8 +58,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTooltipModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatButtonToggleModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatCheckboxModule
   ],
   exports: [
     HttpClientModule,
@@ -84,8 +88,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTooltipModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatButtonToggleModule,
     MatTableModule,
     MatPaginatorModule,
+    MatCheckboxModule,
     EmailSubscriptionComponent,
     TableComponent,
     FilterComponent,

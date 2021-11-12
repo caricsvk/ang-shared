@@ -3,18 +3,35 @@
 
   <mat-table [dataSource]="dataSource$">
 
+    <ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef [className]="'select'">
+        <mat-checkbox (change)="$event ? toggleAll() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </mat-header-cell>
+      <mat-cell mat-cell *matCellDef="let row" [className]="'select'">
+        <mat-checkbox *ngIf="row"
+                      (click)="$event.stopPropagation()"
+                      (change)="$event ? updateSelection(row) : null"
+                      [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
       <mat-header-cell *matHeaderCellDef [className]="column.key + ' type' + column.type">
-        <div>
-          <span (click)="changeSort(column)">
+        <ng-template #colHeaderLabel>
+          <span class="col-label" (click)="changeSort(column)">
             {{column.name}}
             <mat-icon *ngIf="column.key == state.order && state.orderType == 'ASC'">south</mat-icon>
             <mat-icon *ngIf="column.key == state.order && state.orderType == 'DESC'">north</mat-icon>
           </span>
-          <milo-filter *ngIf="showFilters" [column]="column"
-                       [value]="state.deserializeColumnValue(column)" (valueChanged)="changeFilter(column, $event)">
-          </milo-filter>
-          </div>
+        </ng-template>
+        <milo-filter *ngIf="showFilters; else colHeaderLabel" [column]="column"
+                     [value]="state.deserializeColumnValue(column)" (valueChanged)="changeFilter(column, $event)">
+          <ng-container *ngTemplateOutlet="colHeaderLabel"></ng-container>
+        </milo-filter>
       </mat-header-cell>
       <mat-cell *matCellDef="let row" [className]="column.key + ' type' + column.type">
         {{column.view ? column.view(row) : view(column, row)}}

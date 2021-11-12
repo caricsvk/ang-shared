@@ -89,12 +89,12 @@ export class TableState {
         // @ts-ignore
         let min = this[column.key + FilterType.MIN];
         if (min && column.type === ColumnType.Datetime) {
-          min = new Date(min);
+          min = new Date(parseInt(min));
         }
         // @ts-ignore
         let max = this[column.key + FilterType.MAX];
         if (max && column.type === ColumnType.Datetime) {
-          max = new Date(max);
+          max = new Date(parseInt(max));
         }
         return { min, max };
       case ColumnType.Boolean:

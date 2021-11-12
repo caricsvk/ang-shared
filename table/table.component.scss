@@ -29,9 +29,20 @@ form {
     min-width: 50px;
     flex-grow: 2;
     &.type3 {
-      min-width: 90px;
-      max-width: 170px;
+      min-width: 210px;
+      max-width: 210px;
+      mat-form-field {
+        min-width: 100px;
+        width: calc(50% - 0.25rem);
+        &:first-child {
+          margin-right: 0.5rem;
+        }
+      }
       -webkit-line-break: after-white-space;
+    }
+    &.select {
+      min-width: 20px;
+      max-width: 20px;
     }
     &:last-child {
       min-width: 90px;
@@ -48,19 +59,18 @@ form {
 
   mat-header-cell {
     align-self: baseline;
-    > div {
+    > * {
       width: 100%;
+    }
+    ::ng-deep .col-label {
+      cursor: pointer;
+      display: block;
+      margin: 1rem 0 0.5rem 0;
 
-      > span {
-        cursor: pointer;
-        display: block;
-        margin: 1rem 0 0.5rem 0;
-
-        mat-icon {
-          font-size: 0.8rem !important;
-          height: 18px !important;
-          width: 18px !important;
-        }
+      mat-icon {
+        font-size: 0.8rem !important;
+        height: 18px !important;
+        width: 18px !important;
       }
     }
   }

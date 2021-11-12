@@ -7,3 +7,13 @@ mat-form-field {
   font-size: 0.8rem;
   cursor: pointer;
 }
+
+.two {
+  mat-form-field {
+    min-width: 100px;
+    width: calc(50% - 0.25rem);
+    &:first-child {
+      margin-right: 0.5rem;
+    }
+  }
+}
