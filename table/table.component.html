@@ -5,7 +5,7 @@
 
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef [className]="'select'">
-        <mat-checkbox (change)="$event ? toggleAll() : null"
+        <mat-checkbox (change)="$event ? toggleSelectAll() : null"
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()">
         </mat-checkbox>

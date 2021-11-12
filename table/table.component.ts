@@ -57,7 +57,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     this.displayedColumns.push('last');
     if (this.selected) {
       this.displayedColumns.unshift('select');
-      this.selection.clear();
+      if (this.selected.length === 0) {
+        this.selection.clear();
+      }
     }
     if (changes['adapter']) {
       this.actions = this.adapter.getActions();
@@ -159,7 +161,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     return numSelected === numRows;
   }
 
-  toggleAll() {
+  toggleSelectAll() {
     if (this.isAllSelected()) {
       this.selection.clear();
     } else {
