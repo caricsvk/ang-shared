@@ -8,6 +8,16 @@ form {
 }
 
 ::ng-deep milo-table mat-table {
+
+  &.filters-shown mat-header-cell {
+    align-self: stretch;
+    &:last-child {
+      padding: 0.5rem 0 1rem;
+      > * {
+        place-content: center;
+      }
+    }
+  }
   width: 100%;
   display: block;
 
@@ -15,7 +25,6 @@ form {
     flex-wrap: wrap;
     milo-filter {
       width: 100%;
-      display: block;
     }
   }
 
@@ -25,7 +34,7 @@ form {
 
   mat-header-cell, mat-cell {
     margin-right: 1rem !important;
-    line-break: anywhere;
+    //line-break: anywhere;
     min-width: 50px;
     flex-grow: 2;
     &.type3 {
@@ -45,7 +54,7 @@ form {
       max-width: 20px;
     }
     &:last-child {
-      min-width: 90px;
+      min-width: 110px;
       justify-content: flex-end;
       padding-right: 0;
       padding-left: 1rem;
@@ -55,7 +64,7 @@ form {
         overflow: hidden;
         margin-left: 3px;
         &.filter-btn {
-          width: 100%;
+          min-width: 100%;
           margin: 0;
           mat-icon {
             position: absolute;
@@ -68,11 +77,20 @@ form {
   }
 
   mat-header-cell {
-    align-self: baseline;
     > * {
       width: 100%;
+      flex-direction: column;
+      box-sizing: border-box;
+      display: flex;
+      place-content: flex-start space-between;
+      align-items: flex-start;
+      height: 100%;
+      > * {
+        width: 100%;
+      }
     }
     ::ng-deep .col-label {
+      white-space: nowrap;
       cursor: pointer;
       display: block;
       margin: 1rem 0 0.5rem 0;

@@ -1,7 +1,7 @@
 <form class="milo-table-form ui form" (ngSubmit)="filterResults()">
 <!--  class="mat-elevation-z8"-->
 
-  <mat-table [dataSource]="dataSource$">
+  <mat-table [dataSource]="dataSource$" [class.filters-shown]="showFilters">
 
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef [className]="'select'">
@@ -48,7 +48,7 @@
           </button>
           <div *ngIf="showFilters" style="margin-top: 0.2rem;">
             <button class="ui icon fluid button filter-btn" mat-flat-button color="primary" >
-              <i class="search icon"></i> SEARCH ({{rowsTotalCount}})
+              <mat-icon>search</mat-icon> {{rowsTotalCount}}
             </button>
           </div>
         </div>
