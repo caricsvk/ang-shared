@@ -53,6 +53,16 @@ form {
       button {
         //width: auto;
         overflow: hidden;
+        margin-left: 3px;
+        &.filter-btn {
+          width: 100%;
+          margin: 0;
+          mat-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+          }
+        }
       }
     }
   }

@@ -40,13 +40,15 @@
 
     <ng-container matColumnDef="last">
       <mat-header-cell *matHeaderCellDef>
-        <div style="text-align: right;">
-          <button type="button" (click)="showFilters=!showFilters" mat-flat-button class="filter-btn">
-            <mat-icon>filter_alt</mat-icon> {{rowsTotalCount}}
+        <div>
+          <button type="button" (click)="showFilters = !showFilters"
+                  mat-flat-button class="filter-btn" [style.background-color]="showFilters ? '#e0e0e0' : 'transparent'">
+            FILTER
+            <mat-icon>{{showFilters ? 'close' : 'filter_alt'}}</mat-icon>
           </button>
           <div *ngIf="showFilters" style="margin-top: 0.2rem;">
-            <button class="ui icon fluid button" mat-flat-button color="primary" >
-              <i class="search icon"></i> SEARCH
+            <button class="ui icon fluid button filter-btn" mat-flat-button color="primary" >
+              <i class="search icon"></i> SEARCH ({{rowsTotalCount}})
             </button>
           </div>
         </div>
@@ -54,7 +56,7 @@
       <mat-cell *matCellDef="let row">
         <ng-container *ngFor="let action of actions">
           <button (click)="action.trigger(row)"
-                  type="button" [ngClass]="action.name" mat-stroked-button
+                  type="button" [ngClass]="action.name" mat-icon-button
                   [ngStyle]="{'display': action.show(row) ? 'inline-block' : 'none', visibility: row ? 'visible': 'hidden'}">
             <mat-icon *ngIf="action.icon">{{action.icon}}</mat-icon>
             {{action.name}}

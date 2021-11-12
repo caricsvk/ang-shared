@@ -57,6 +57,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     this.displayedColumns.push('last');
     if (this.selected) {
       this.displayedColumns.unshift('select');
+      this.selection.clear();
     }
     if (changes['adapter']) {
       this.actions = this.adapter.getActions();
