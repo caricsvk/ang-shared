@@ -17,7 +17,7 @@ export class ConfirmationDialogCustomValue {
     public label: string,
     public values?: any[]
   ) {}
-  getType(): string {
+  getType(): string | null {
     if (this.values === undefined || this.values === null) {
       return 'text';
     } else if (this.values.length > 2) {

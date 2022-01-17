@@ -30,7 +30,7 @@ export class MessagingService {
     });
   }
 
-  showFloatingMessage(message: string, action: string = null, duration = MessageDuration.Medium): MatSnackBarRef<TextOnlySnackBar> {
+  showFloatingMessage(message: string, action?: string, duration = MessageDuration.Medium): MatSnackBarRef<TextOnlySnackBar> {
     return this.matSnackBar.open(message, action, {duration});
   }
 }
