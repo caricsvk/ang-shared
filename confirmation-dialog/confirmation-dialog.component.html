@@ -1,12 +1,14 @@
 <h1>{{data.title}}</h1>
 <div mat-dialog-content>
   <p>{{data.subtitle}}</p>
-  <div *ngFor="let customValue of data.customValues">
-    <label>
-      <input *ngIf="customValue.getType() === 'checkbox'" type="checkbox" [(ngModel)]="customValue.value" />
-      {{customValue.label}}
+  <div *ngFor="let customValue of data.customValues; let index = index">
+    <label *ngIf="customValue.getType() === 'checkbox'">
+      <input type="checkbox" [(ngModel)]="customValue.value" />
     </label>
-    <input *ngIf="customValue.getType() === 'text'" type="text" [(ngModel)]="customValue.value" />
+    <mat-form-field>
+      <mat-label>{{customValue.label}}</mat-label>
+      <input [name]="'val' + index" *ngIf="customValue.getType() === 'text'" matInput type="text" [(ngModel)]="customValue.value" />
+    </mat-form-field>
   </div>
 </div>
 <div class="actions">
