@@ -15,13 +15,13 @@ export abstract class EntityService<T> {
   protected abstract getApiPath(): string;
   protected abstract createT(obj?: object): T;
 
-  fetchCountSearch(params: HttpParams): Promise<number> {
+  fetchCountSearch(params = new HttpParams()): Promise<number> {
     // @ts-ignore
     return this.httpClient.get<{value: number}>(this.getApiPath() + '/count', {params})
       .pipe(map((json: any): number => json.value)).toPromise();
   }
 
-  fetchSearch(params?: HttpParams): Promise<T[]> {
+  fetchSearch(params = new HttpParams()): Promise<T[]> {
     // @ts-ignore
     return this.httpClient.get<any[]>(this.getApiPath(), {params})
       .pipe(map((items: any[]): T[] => items.map(obj => this.createT(obj)))).toPromise();

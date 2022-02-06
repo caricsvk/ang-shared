@@ -9,7 +9,7 @@ export abstract class LocalService<T> {
 
   protected allEntitiesSubject = new BehaviorSubject<T[]>([]);
 
-  abstract getStorageKey(): string;
+  protected abstract getStorageKey(): string;
   abstract createT(): T;
 
   constructor(
@@ -17,9 +17,11 @@ export abstract class LocalService<T> {
     this.allEntitiesSubject.next(this.fetchAll());
   }
 
+
+
   findEntityIndex(key: string | number, entities: T[]) {
     // @ts-ignore
-    return entities.findIndex(entity => entity && (entity[key] && entity[key] == key));
+    return entities.findIndex(entity => entity && (entity[this.getIdName()] && entity[this.getIdName()] == key));
   }
 
   fetchAll() {
@@ -31,7 +33,7 @@ export abstract class LocalService<T> {
   save(entity: T) {
     entity = Object.assign(this.createT(), entity);
     // @ts-ignore
-    const existingIndex = this.findEntityIndex(entity[this.getIdentifierKey()], this.allEntitiesSubject.value);
+    const existingIndex = this.findEntityIndex(entity[this.getIdName()], this.allEntitiesSubject.value);
     if (existingIndex >= 0) {
       this.allEntitiesSubject.value.splice(existingIndex, 1, entity);
     } else {
@@ -58,7 +60,11 @@ export abstract class LocalService<T> {
     return foundIndex >= 0 ? this.allEntitiesSubject.value[foundIndex] : null;
   }
 
-  search(params: HttpParams | undefined) {
+  getAll() {
+    return this.allEntitiesSubject.asObservable();
+  }
+
+  search(params: HttpParams = new HttpParams()) {
     params = params || new HttpParams();
     const filteredUsers = this.filter(params);
     // console.log('local search', params, filteredUsers);
@@ -73,7 +79,7 @@ export abstract class LocalService<T> {
     return filteredUsers.sort(orderFn).slice(offset, offset + limit);
   }
 
-  countSearch(params: HttpParams) {
+  countSearch(params: HttpParams = new HttpParams()) {
     return this.filter(params).length;
   }
 
@@ -90,7 +96,7 @@ export abstract class LocalService<T> {
     return users;
   }
 
-  protected getIdentifierKey(): string {
+  protected getIdName(): string {
     return 'id';
   }
 
