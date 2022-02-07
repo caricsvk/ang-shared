@@ -76,7 +76,7 @@ export abstract class LocalService<T> {
     const offsetString = params.get('offset');
     let offset = parseInt(offsetString ? offsetString : '0', 10);
     // @ts-ignore
-    return filteredUsers.sort(orderFn).slice(offset, offset + limit);
+    return filteredUsers.sort(orderFn).slice(offset, offset + limit + 1);
   }
 
   countSearch(params: HttpParams = new HttpParams()) {
