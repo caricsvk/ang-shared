@@ -87,6 +87,10 @@ export abstract class LocalService<T> {
     let users = this.allEntitiesSubject.value;
     for (let filterKey of params.keys()) {
       // TODO
+      if (filterKey === 'filter') {
+        // @ts-ignore
+        users = users.filter(user => Object.keys(user).find(column => user[column] && user[column].includes(params.get(filterKey))));
+      }
       if (filterKey.endsWith('_wild')) {
         const column = filterKey.split('_wild')[0];
         // @ts-ignore
