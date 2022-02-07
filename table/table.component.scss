@@ -21,6 +21,13 @@ form {
   width: 100%;
   display: block;
 
+  mat-header-row {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+  }
+
   mat-header-row, mat-row {
     flex-wrap: wrap;
     milo-filter {
