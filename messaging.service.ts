@@ -1,4 +1,4 @@
-import { Injectable, Type } from '@angular/core';
+import { Injectable, TemplateRef, Type } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { ConfirmationDialogComponent, ConfirmationDialogData } from './confirmation-dialog/confirmation-dialog.component';
@@ -19,7 +19,7 @@ export class MessagingService {
     return this.dialog.open(ConfirmationDialogComponent, {width: '400px', data});
   }
 
-  showDialog(component: Type<any>, data: any = null): MatDialogRef<any, any> {
+  showDialog(component: Type<any> | TemplateRef<any>, data: any = null): MatDialogRef<any, any> {
     return this.dialog.open(component, {
       width: '90%',
       maxWidth: '800px',
