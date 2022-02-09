@@ -17,8 +17,6 @@ export abstract class LocalService<T> {
     this.allEntitiesSubject.next(this.fetchAll());
   }
 
-
-
   findEntityIndex(key: string | number, entities: T[]) {
     // @ts-ignore
     return entities.findIndex(entity => entity && (entity[this.getIdName()] && entity[this.getIdName()] == key));
@@ -37,7 +35,7 @@ export abstract class LocalService<T> {
     if (existingIndex >= 0) {
       this.allEntitiesSubject.value.splice(existingIndex, 1, entity);
     } else {
-      this.allEntitiesSubject.value.push(entity);
+      this.allEntitiesSubject.value.unshift(entity);
     }
     window.localStorage.setItem(this.getStorageKey(), JSON.stringify(this.allEntitiesSubject.value));
     this.allEntitiesSubject.next(this.allEntitiesSubject.value);
