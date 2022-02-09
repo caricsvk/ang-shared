@@ -25,7 +25,7 @@ export class MessagingService {
       maxWidth: '800px',
       minHeight: '400px',
       maxHeight: '94%',
-      panelClass: 'relto-overlay-pane',
+      panelClass: 'milo-overlay-pane',
       data
     });
   }
