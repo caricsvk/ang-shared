@@ -15,29 +15,27 @@ export abstract class EntityService<T> {
   protected abstract getApiPath(): string;
   protected abstract createT(obj?: object): T;
 
-  fetchCountSearch(params = new HttpParams()): Promise<number> {
-    // @ts-ignore
+  fetchCountSearch(params = new HttpParams()): Observable<number> {
     return this.httpClient.get<{value: number}>(this.getApiPath() + '/count', {params})
-      .pipe(map((json: any): number => json.value)).toPromise();
+      .pipe(map((json: any): number => json.value));
   }
 
-  fetchSearch(params = new HttpParams()): Promise<T[]> {
-    // @ts-ignore
+  fetchSearch(params = new HttpParams()): Observable<T[]> {
     return this.httpClient.get<any[]>(this.getApiPath(), {params})
-      .pipe(map((items: any[]): T[] => items.map(obj => this.createT(obj)))).toPromise();
+      .pipe(map((items: any[]): T[] => items.map(obj => this.createT(obj))));
   }
 
-  save(user: T): Observable<T> {
+  save(entity: T): Observable<T> {
     // @ts-ignore
-    return this.httpClient[user.id ? 'put' : 'post']<any>(this.getApiPath(), user).pipe(map(obj => this.createT(obj)));
+    return this.httpClient[entity.id ? 'put' : 'post']<any>(this.getApiPath(), entity).pipe(map(obj => this.createT(obj)));
   }
 
-  remove(id: number) {
+  remove(id: string | number) {
     return this.httpClient.delete<any>(this.getApiPath() + `/${id}`);
   }
 
-  find(id: string) {
-    return this.httpClient.get<any>(this.getApiPath() + `/${id}`).pipe(map(obj => this.createT(obj)),).toPromise();
+  find(id: string | number) {
+    return this.httpClient.get<any>(this.getApiPath() + `/${id}`).pipe(map(obj => this.createT(obj)),);
   }
 
 }
