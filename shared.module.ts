@@ -32,6 +32,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { BaseComponent } from './base.component';
 
 @NgModule({
   imports: [
@@ -99,6 +100,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     ResizableDirective
   ],
   declarations: [
+    BaseComponent,
     ConfirmationDialogComponent,
     HorizontalScrollComponent,
     LoadingMaskComponent,
@@ -114,5 +116,3 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
   ]
 })
 export class SharedModule { }
-
-
