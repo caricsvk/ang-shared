@@ -25,6 +25,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSelectModule } from '@angular/material/select';
 import { ResizableDirective } from './resizable.directive';
 import { DialogCloseComponent } from './dialog-close/dialog-close.component';
+import { BaseComponent } from './base.component';
 
 @NgModule({
   imports: [
@@ -78,6 +79,7 @@ import { DialogCloseComponent } from './dialog-close/dialog-close.component';
     ResizableDirective
   ],
   declarations: [
+    BaseComponent,
     ConfirmationDialogComponent,
     HorizontalScrollComponent,
     LoadingMaskComponent,
