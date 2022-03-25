@@ -41,12 +41,12 @@ export class Ng4FilesClickComponent implements OnInit, DoCheck {
   ngOnInit() {
     const config = this.ng4FilesService.getConfig(this.configId);
 
-    this.maxFilesCount = config.maxFilesCount;
+    this.maxFilesCount = config.maxFilesCount || 1;
     this.acceptExtensions = <string>config.acceptExtensions;
   }
 
-  public onChange(files: FileList): void {
-    if (!files.length) {
+  public onChange(files: FileList | null): void {
+    if (!files || !files.length) {
         return;
     }
 
