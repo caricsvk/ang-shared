@@ -23,14 +23,14 @@ export class Ng4FilesUtilsService {
         const totalFilesSize = config.totalFilesSize;
         const acceptExtensions = config.acceptExtensions;
 
-        if (filesArray.length > maxFilesCount) {
+        if (maxFilesCount && filesArray.length > maxFilesCount) {
             return <Ng4FilesSelected> {
                 status: Ng4FilesStatus.STATUS_MAX_FILES_COUNT_EXCEED,
                 files: filesArray
             };
         }
 
-        const filesWithExceedSize = filesArray.filter((file: File) => file.size > config.maxFileSize);
+        const filesWithExceedSize = filesArray.filter((file: File) => config.maxFileSize && file.size > config.maxFileSize);
         if (filesWithExceedSize.length) {
             return <Ng4FilesSelected> {
                 status: Ng4FilesStatus.STATUS_MAX_FILE_SIZE_EXCEED,
@@ -40,7 +40,7 @@ export class Ng4FilesUtilsService {
 
         let filesSize = 0;
         filesArray.forEach((file: File) => filesSize += file.size);
-        if (filesSize > totalFilesSize) {
+        if (totalFilesSize && filesSize > totalFilesSize) {
             return <Ng4FilesSelected> {
                 status: Ng4FilesStatus.STATUS_MAX_FILES_TOTAL_SIZE_EXCEED,
                 files: filesArray
