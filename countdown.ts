@@ -26,6 +26,10 @@ export class Countdown {
     this.setTimeUpdate();
   }
 
+  getTimeUntil() {
+    return this.timeUntil;
+  }
+
   private setTimeUpdate(): void {
     // console.log('setTimeUpdate', new Date());
     const now = new Date();
