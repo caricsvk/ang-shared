@@ -38,10 +38,10 @@ export class Countdown {
     this.daysDiff = timeDiff / dayInMs;
     const modulo = this.daysDiff % 1;
     // this.days = this.config.showTime ? Math.floor(this.daysDiff) : Math.ceil(this.daysDiff);
-    this.days = Math.floor(this.daysDiff);
-    this.hours = Math.floor((modulo % 1) * 24);
-    this.minutes = Math.floor((timeDiff / 1000 / 60) % 60);
-    this.seconds = Math.floor((timeDiff / 1000) % 60);
+    this.days = timeDiff < 0 ? Math.ceil(this.daysDiff) : Math.floor(this.daysDiff);
+    this.hours = timeDiff < 0 ? Math.ceil((modulo % 1) * 24) : Math.floor((modulo % 1) * 24);
+    this.minutes = timeDiff < 0 ? Math.ceil((timeDiff / 1000 / 60) % 60) : Math.floor((timeDiff / 1000 / 60) % 60);
+    this.seconds = timeDiff < 0 ? Math.ceil((timeDiff / 1000) % 60) : Math.floor((timeDiff / 1000) % 60);
     if (this.days < 0) {
       this.days = 0;
     }
