@@ -14,6 +14,8 @@ export class EmailSubscriptionComponent {
   @Input() title = 'Get notified about releases and new features.';
   @Input() bottomText = '';
   @Input() buttonText = 'Subscribe';
+  @Input() apiPath = '/api/user/subscribe';
+  @Input() successText = 'Thank you for subscription.';
 
   isSavingInProgress = false;
   savingResponse = '';
@@ -35,9 +37,9 @@ export class EmailSubscriptionComponent {
       MgInterceptorHeaders.PREVENT_DEFAULT_ERROR_HANDLING
     );
     const params = new HttpParams().set('email', this.user.email);
-    this.http.post('/api/user/subscribe', {}, {headers, params})
+    this.http.post(this.apiPath, {}, {headers, params})
       .pipe(finalize(() => this.isSavingInProgress = false))
-      .subscribe(() => this.savingResponse = 'Thank you for subscription.',
+      .subscribe(() => this.savingResponse = this.successText,
         (error) => this.savingResponse = error.status === 409 ? 'You were already subscribed :).' :
           'An unexpected error occurred, please try again later or contact us.');
   }
