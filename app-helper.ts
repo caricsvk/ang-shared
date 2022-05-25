@@ -1,8 +1,8 @@
 export class AppHelper {
 
-  static isLiveProductionEnvironment(): boolean {
+  static isLiveProductionEnvironment(domain: string): boolean {
     const currentHost: string = window.location.hostname || window.location.host;
-    return currentHost.indexOf('dboard') >= 0; // TODO xxx https://dboard.app
+    return currentHost.indexOf(domain) >= 0;
   }
 
 }
