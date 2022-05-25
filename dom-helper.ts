@@ -44,7 +44,7 @@ export class DomHelper {
       this.scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
 
       // Removing temporary elements from the DOM
-      outer.parentNode.removeChild(outer);
+      outer.parentNode?.removeChild(outer);
 
     }
     return this.scrollbarWidth;
@@ -55,7 +55,7 @@ export class DomHelper {
     document.head.appendChild(styleEl);
     var styleSheet = styleEl.sheet;
     for (var i = 0; i < rules.length; i++) {
-      styleSheet.insertRule(rules[i], styleSheet.cssRules.length);
+      styleSheet?.insertRule(rules[i], styleSheet.cssRules.length);
     }
   }
 
