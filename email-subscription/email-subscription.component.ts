@@ -39,7 +39,7 @@ export class EmailSubscriptionComponent {
       .pipe(finalize(() => this.isSavingInProgress = false))
       .subscribe(() => this.savingResponse = 'Thank you for subscription.',
         (error) => this.savingResponse = error.status === 409 ? 'You were already subscribed :).' :
-          'An unexpected error occurred, please try again later or message us at contact@dboard.app.');
+          'An unexpected error occurred, please try again later or contact us.');
   }
 
 }
