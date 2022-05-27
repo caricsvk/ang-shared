@@ -55,9 +55,9 @@ export class ErrorHandlerService {
 
   showError(error: Error, title = 'An unexpected error occurred'): void {
     console.error('caught JS error', error);
-    if (! AppHelper.isLiveProductionEnvironment()) {
+    // if (! AppHelper.isLiveProductionEnvironment()) {
       // alert(title + ':\n' + error.message + '\n' + error.stack);
-    }
+    // }
   }
 
 }
