@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppHelper } from './app-helper';
+import { environment } from '../../environments/environment';
 
 // import { AppHelper } from "../app-helper";
 
@@ -18,7 +19,7 @@ export class AnalyticsService {
   }
 
   constructor() {
-    this.trackingTurnedOn = AppHelper.isLiveProductionEnvironment();
+    this.trackingTurnedOn = AppHelper.isLiveProductionEnvironment(environment.productionDomain);
   }
 
   sendPageView(path: string): void {

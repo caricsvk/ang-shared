@@ -166,6 +166,7 @@ export class ResizableDirective implements OnInit {
       restoreGlobalMouseEvents();
       this.action.emit(null);
 
+      const isResizingOrDragging = this.resizing || this.dragging;
       if (this.resizing) {
         this.resizing = false;
         this.resized.emit(
@@ -184,8 +185,8 @@ export class ResizableDirective implements OnInit {
       }
 
       const mousedownTime = new Date().getTime() - this.start.getTime();
-      const tooFastForDragOrResize = mousedownTime < 200;
-      // console.log('tooFastForDrag', tooFastForDragOrResize, mousedownTime);
+      const tooFastForDragOrResize = mousedownTime < 200 && isResizingOrDragging;
+      // console.log('tooFastForDrag', tooFastForDragOrResize, mousedownTime, isResizingOrDragging);
       if (tooFastForDragOrResize) {
         setTimeout(() => this.action.emit(ResizableAction.Initialized), 10);
         setTimeout(() => this.action.emit(null), 20);
