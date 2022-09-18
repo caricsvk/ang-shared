@@ -5,8 +5,9 @@ export class Load {
   private static callback: {[key: string]: Function} = {};
   private static inProgress: string[] = [];
 
-  public static loadJsOnce(src: string, callback = function () {}, dependencies: string[] = []) {
+  public static loadJsOnce(src: string, callback?: () => any, dependencies: string[] = []) {
     //store callbacks
+    callback = callback || function () {};
     const oldCallback = typeof Load.callback[src] === "function" ? Load.callback[src] : function () {};
     (function (oldCallback, callback) {
       Load.callback[src] = function () {
