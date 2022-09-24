@@ -4,23 +4,37 @@ export class Load {
   private static dependentFiles: DependentFile[] = [];
   private static inProgressFiles: {[key: string]: DependentFile[]} = {};
 
-  public static loadJsOnce(file: DependentFile | string, callback: Function = () => {}) {
-    if (typeof file === 'string') {
-      file = new DependentFile(file);
+  public static loadOne(
+    fileOrSrc: DependentFile | string, dependencies?: string[], callback?: Function
+  ): Promise<void> {
+    const file = fileOrSrc instanceof DependentFile ? fileOrSrc : new DependentFile(fileOrSrc);
+    if (dependencies) {
+      file.dependencies = dependencies.map(dep => new DependentFile(dep))
     }
+    if (typeof callback === 'function') {
+      file.setCallback(callback);
+    }
+    return this.loadFile(file);
+  }
+
+  public static loadMulti(files: (DependentFile | string)[], dependencies?: string[]): Promise<void>[] {
+    return files.map((file: DependentFile | string) => this.loadOne(file, dependencies));
+  }
+
+  private static loadFile(file: DependentFile): Promise<void> {
     const alreadyInDepQueue = this.dependentFiles.includes(file);
     const inProgressFile = this.inProgressFiles[file.src];
-
     if (this.loadedJs.indexOf(file.src) >= 0) {
-      file.callback();
+      file.resolve();
     } else if (inProgressFile && inProgressFile.indexOf(file) === -1) {
       inProgressFile.push(file);
     } else if (!inProgressFile && !this.hasLoadedDependencies(file) && !alreadyInDepQueue) {
       this.dependentFiles.push(file);
-      file.dependencies.forEach(dependencyFile => Load.loadJsOnce(dependencyFile));
+      file.dependencies.forEach(dependencyFile => Load.loadFile(dependencyFile));
     } else if (!inProgressFile && this.hasLoadedDependencies(file)) {
       this.load(file);
     }
+    return file.promise;
   }
 
   private static load(file: DependentFile) {
@@ -45,19 +59,19 @@ export class Load {
       Load.inProgressFiles[file.src] = [];
     }
     Load.inProgressFiles[file.src].push(file);
-    Load.dependentFiles.splice(Load.dependentFiles.indexOf(file), 1);
+    const indexAsDependentFile = Load.dependentFiles.indexOf(file);
+    if (indexAsDependentFile >= 0) {
+      Load.dependentFiles.splice(indexAsDependentFile, 1);
+    }
     document.getElementsByTagName('head')[0].appendChild(script);
   }
 
   private static onFileLoad(src: string) {
-    //console.log("load callback " + src);
     Load.loadedJs.push(src);
     const files = Load.inProgressFiles[src];
     delete Load.inProgressFiles[src];
-    files.filter(file => typeof file.callback === "function").forEach(
-      file => file.callback()
-    );
-    Load.dependentFiles.forEach(file => Load.loadJsOnce(file));
+    files.forEach(file => file.resolve());
+    Load.dependentFiles.forEach(file => Load.loadFile(file));
   }
 
   private static hasLoadedDependencies(file: DependentFile) {
@@ -67,10 +81,24 @@ export class Load {
 }
 
 class DependentFile {
+  private promiseResolve: Function;
+  promise: Promise<void>;
   constructor(
     public src: string,
-    public callback: Function = function () {},
-    public dependencies: DependentFile[] = []
+    public dependencies: DependentFile[] = [],
+    private callback: Function = function () {}
   ) {
+    this.promise = new Promise(resolve => this.promiseResolve = resolve);
+  }
+
+  setCallback(callback: Function) {
+    this.callback = callback
+  }
+
+  resolve() {
+    if (typeof this.callback === "function") {
+      this.callback();
+    }
+    this.promiseResolve();
   }
 }
