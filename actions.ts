@@ -14,6 +14,10 @@ export class BasicAction {
   getNotNullStatus() {
     return this.status || 0;
   }
+
+  isSuccess() {
+    return this.status >= 200 && this.status < 300;
+  }
 }
 
 export type TypingAction = false | 'typing' | 'saving' | 'done';
