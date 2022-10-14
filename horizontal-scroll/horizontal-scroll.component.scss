@@ -54,3 +54,7 @@
   }
 
 }
+
+::ng-deep .scrollable-element > * {
+  display: inline-block;
+}
