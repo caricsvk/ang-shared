@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 export class ConfirmationDialogData {
   constructor(
@@ -44,11 +45,17 @@ export class ConfirmationDialogOnCloseResult {
 })
 export class ConfirmationDialogComponent {
 
-  constructor(public dialog: MatDialogRef<ConfirmationDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData) {
+  subtitle: SafeHtml;
+
+  constructor(
+    private domSanitizer: DomSanitizer,
+    public dialog: MatDialogRef<ConfirmationDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData
+  ) {
     if (!(this.data instanceof ConfirmationDialogData)) {
       this.data = Object.assign(new ConfirmationDialogData(), this.data);
     }
+    this.subtitle = domSanitizer.bypassSecurityTrustHtml(this.data.subtitle || '');
   }
   close(confirmation: boolean): void {
     this.dialog.close(new ConfirmationDialogOnCloseResult(confirmation, this.data.customValues));
