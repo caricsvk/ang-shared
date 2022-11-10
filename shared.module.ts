@@ -26,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ResizableDirective } from './resizable.directive';
 import { DialogCloseComponent } from './dialog-close/dialog-close.component';
 import { BaseComponent } from './base.component';
+import { DeferLoadDirective } from './defer-load.directive';
 
 @NgModule({
   imports: [
@@ -76,7 +77,8 @@ import { BaseComponent } from './base.component';
     MatTooltipModule,
     EmailSubscriptionComponent,
     DialogCloseComponent,
-    ResizableDirective
+    ResizableDirective,
+    DeferLoadDirective
   ],
   declarations: [
     BaseComponent,
@@ -85,7 +87,8 @@ import { BaseComponent } from './base.component';
     LoadingMaskComponent,
     EmailSubscriptionComponent,
     DialogCloseComponent,
-    ResizableDirective
+    ResizableDirective,
+    DeferLoadDirective
   ]
 })
 export class SharedModule { }
