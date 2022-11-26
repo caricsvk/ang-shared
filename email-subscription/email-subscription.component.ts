@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MgInterceptorHeaders, MiloHttpInterceptor } from '../http.interceptor';
 import { finalize } from 'rxjs/operators';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Component({
@@ -22,7 +22,7 @@ export class EmailSubscriptionComponent {
   user: User = {
     email: ''
   };
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  emailFormControl = new UntypedFormControl('', [Validators.required, Validators.email]);
 
   constructor(private http: HttpClient) {
   }
