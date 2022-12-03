@@ -13,11 +13,19 @@ import { Observable, Subject } from 'rxjs';
 })
 export class ErrorHandlerService {
 
+  private openedDialogErrorCode: number = null;
   private unauthorizedEventSubject = new Subject<ConfirmationDialogOnCloseResult>();
 
-  constructor(private dialog: MatDialog) { }
+  constructor(
+    private dialog: MatDialog
+  ) { }
 
   public showHttpError(errorCode: number): void {
+
+    if (this.openedDialogErrorCode === errorCode) {
+      return; // do not open same error multiple times / layered;
+    }
+
     let data;
     switch (errorCode) {
       case 401:
@@ -34,6 +42,7 @@ export class ErrorHandlerService {
 
     this.dialog.open(ConfirmationDialogComponent, {id: 'errorDialog', width: '400px', data}).afterClosed().subscribe(
       (response: ConfirmationDialogOnCloseResult) => {
+        this.openedDialogErrorCode = null;
         switch (errorCode) {
           case 401:
             this.unauthorizedEventSubject.next(response);
@@ -47,6 +56,8 @@ export class ErrorHandlerService {
             }
         }
       });
+
+    this.openedDialogErrorCode = errorCode;
   }
 
   unauthorizedError(): Observable<ConfirmationDialogOnCloseResult> {
