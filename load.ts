@@ -38,18 +38,16 @@ export class Load {
   }
 
   private static load(file: DependentFile) {
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = file.src;
-    script.onload = () => this.onFileLoad(file.src);
+    const fileElement = file.src.endsWith('css') ? this.createCssLink(file.src) : this.createScript(file.src);
+    fileElement.onload = () => this.onFileLoad(file.src);
     // @ts-ignore
-    script.onreadystatechange = () => {
+    fileElement.onreadystatechange = () => {
       //alert("onreadystatechange " + this.readyState + " : " + (this.readyState === "complete" || this.readyState === "loaded"));
       // @ts-ignore
       if (this.readyState === "complete" || this.readyState === "loaded")
         this.onFileLoad(file.src);
     };
-    script.onerror = function () {
+    fileElement.onerror = function () {
       delete Load.inProgressFiles[file.src];
       setTimeout(function () {
         // self.ccLoad(src);
@@ -63,7 +61,7 @@ export class Load {
     if (indexAsDependentFile >= 0) {
       Load.dependentFiles.splice(indexAsDependentFile, 1);
     }
-    document.getElementsByTagName('head')[0].appendChild(script);
+    document.getElementsByTagName('head')[0].appendChild(fileElement);
   }
 
   private static onFileLoad(src: string) {
@@ -77,6 +75,24 @@ export class Load {
   private static hasLoadedDependencies(file: DependentFile) {
     const missingDependency = file.dependencies.find(dependency => Load.loadedJs.indexOf(dependency.src) === -1);
     return !missingDependency;
+  }
+
+  private static createCssLink(href: string, addAttrs: {[key: string]: string} = {}) {
+    const link = document.createElement("link");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = href;
+    for (let attrName in addAttrs) {
+      link.setAttribute(attrName, addAttrs[attrName]);
+    }
+    return link;
+  }
+
+  private static createScript(src: string) {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = src;
+    return script;
   }
 }
 
