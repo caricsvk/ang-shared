@@ -35,9 +35,13 @@ export class ErrorHandlerService {
       case 403:
         data = new ConfirmationDialogData('Access denied', 'Your permissions are not properly set to see this page.', 'Go Back', null);
         break;
-      default:
-        data = new ConfirmationDialogData('Unexpected server error', 'We are sorry, an unexpected server error has occurred.', 'Reload App', 'Continue');
-        break;
+    }
+    if (errorCode >= 500) {
+      data = new ConfirmationDialogData('Unexpected server error', 'We are sorry, an unexpected server error has occurred.', 'Reload App', 'Continue');
+    }
+
+    if (!data) {
+      return;
     }
 
     this.dialog.open(ConfirmationDialogComponent, {id: 'errorDialog', width: '400px', data}).afterClosed().subscribe(
