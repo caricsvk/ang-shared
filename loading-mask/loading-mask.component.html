@@ -1,6 +1,8 @@
 <div *ngIf="(isGlobal && globalMaskShown) || (!isGlobal && !globalMaskShown && checkAndFixParent)"
      class="loading-mask" [class.global]="isGlobal">
-  <mat-spinner [diameter]="diameter" [strokeWidth]="strokeWidth">
+  <mat-spinner [diameter]="diameter" [strokeWidth]="strokeWidth"
+               [style.margin-left]="(diameter / -2) + 'px'"
+               [style.margin-top]="(diameter / -2) + 'px'">
   </mat-spinner>
 </div>
 

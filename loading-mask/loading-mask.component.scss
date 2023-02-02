@@ -12,8 +12,9 @@
   z-index: 50;
 
   mat-spinner {
-    top: 45%;
-    margin: auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
   }
 
   &.global {
