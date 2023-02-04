@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 
 export class BasicAction {
   message = '';
@@ -17,6 +18,22 @@ export class BasicAction {
 
   isSuccess() {
     return this.status >= 200 && this.status < 300;
+  }
+}
+
+export class DeferredAction<T> extends BasicAction {
+  data: T;
+
+  async set(deferred: Promise<T>) {
+    try {
+      this.status = 'progress';
+      this.data = await deferred;
+      this.status = 200;
+    } catch (e: any) {
+      const error = e as HttpErrorResponse;
+      this.status = error.status;
+      throw e;
+    }
   }
 }
 
