@@ -24,6 +24,13 @@ export class BasicAction {
 export class DeferredAction<T> extends BasicAction {
   data: T;
 
+  constructor(deferred?: Promise<T>) {
+    super();
+    if (deferred) {
+      this.set(deferred);
+    }
+  }
+
   async set(deferred: Promise<T>) {
     try {
       this.status = 'progress';
@@ -34,6 +41,7 @@ export class DeferredAction<T> extends BasicAction {
       this.status = error.status;
       throw e;
     }
+    return this.data;
   }
 }
 
