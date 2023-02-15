@@ -27,6 +27,7 @@ import { ResizableDirective } from './resizable.directive';
 import { DialogCloseComponent } from './dialog-close/dialog-close.component';
 import { BaseComponent } from './base.component';
 import { DeferLoadDirective } from './defer-load.directive';
+import { VideoComponent } from './video/video.component';
 
 @NgModule({
   imports: [
@@ -78,7 +79,8 @@ import { DeferLoadDirective } from './defer-load.directive';
     EmailSubscriptionComponent,
     DialogCloseComponent,
     ResizableDirective,
-    DeferLoadDirective
+    DeferLoadDirective,
+    VideoComponent
   ],
   declarations: [
     BaseComponent,
@@ -88,7 +90,8 @@ import { DeferLoadDirective } from './defer-load.directive';
     EmailSubscriptionComponent,
     DialogCloseComponent,
     ResizableDirective,
-    DeferLoadDirective
+    DeferLoadDirective,
+    VideoComponent
   ]
 })
 export class SharedModule { }

@@ -1,0 +1,14 @@
+<div class="video-wrapper">
+  <video #creationVideo muted="muted" loop preload="metadata" [autoplay]="autoplay"
+         (click)="creationVideo.paused ? creationVideo.play() : creationVideo.pause()">
+    <source *ngIf="srcMp4AndWebm" [src]="srcMp4AndWebm + '.mp4'" type="video/mp4">
+    <source *ngIf="srcMp4AndWebm" [src]="srcMp4AndWebm + '.webm'" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<button *ngIf="showToggleButton" (click)="creationVideo.paused ? creationVideo.play() : creationVideo.pause()"
+        mat-button style="margin: 0.5em;" color="accent">
+  <mat-icon>{{creationVideo.paused ? 'play_arrow' : 'pause'}}</mat-icon>
+  {{creationVideo.paused ? 'Play video' : 'Pause video'}}
+</button>
