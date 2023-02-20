@@ -121,3 +121,5 @@ export const miloEnterLeaveTransition = trigger('miloEnterLeaveTransition', [
     animate('1000ms 0ms ease-in', style({transform: 'translateY(-120%)'})),
   ]),
 ]);
+
+export type MiloTransition = 'appearing' | 'right-to-left' | 'bottom-to-top';
