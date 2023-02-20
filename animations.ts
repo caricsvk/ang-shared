@@ -1,4 +1,4 @@
-import { trigger, animate, style, group, query, transition, state } from '@angular/animations';
+import { animate, group, query, state, style, transition, trigger } from '@angular/animations';
 
 export const routerAnimationDuration = 500;
 
@@ -95,4 +95,29 @@ export const visibilityTransition =  trigger('visibilityTransition', [
   state('hidden', style({opacity: 0})),
   transition('* => visible', [animate('0.5s')]),
   transition('* => hidden', [animate('0.5s')])
+]);
+
+export const miloEnterLeaveTransition = trigger('miloEnterLeaveTransition', [
+  transition('void => appearing', [
+    style({opacity: 0}),
+    animate('1s 0.5s ease-in', style({opacity: 1}))
+  ]),
+  transition('appearing => void', [
+    animate('0.5s 0s ease-out'),
+    style({opacity: 0})
+  ]),
+  transition('void => right-to-left', [
+    style({transform: 'translate(120%, -100%)'}),
+    animate('1000ms 0ms ease-in', style({transform: 'translate(0, -100%)'})),
+  ]),
+  transition('right-to-left => void', [
+    animate('1000ms 0ms ease-in', style({transform: 'translateX(-120%)'})),
+  ]),
+  transition('void => bottom-to-top', [
+    style({transform: 'translateY(20%)'}),
+    animate('1000ms 0ms ease-in', style({transform: 'translateY(-100%)'})),
+  ]),
+  transition('bottom-to-top => void', [
+    animate('1000ms 0ms ease-in', style({transform: 'translateY(-120%)'})),
+  ]),
 ]);
