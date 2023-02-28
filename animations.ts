@@ -77,18 +77,29 @@ export const downTransition = trigger('downTransition', [
   ])
 ]);
 
-export const inOutTransition = trigger(
-  'inOutAnimation',
-  [
-    transition(
-      ':enter',
-      [
-        style({ opacity: 0 }),
-        animate('0.5s ease-in')
-      ]
-    )
-  ]
-);
+export const inOutTransition = trigger('inOutAnimation', [
+  transition(':enter', [
+    style({ opacity: 0 }),
+    animate('0.5s ease-in')
+  ])
+]);
+
+export const appearingTransition = trigger('appearingTransition', [
+  transition(':enter', [
+    style({ opacity: 0 }),
+    animate('1s ease-in')
+  ]),
+  transition(':leave', [
+    animate('0.5s ease-out', style({ opacity: 0 }))
+  ])
+]);
+
+export const homeSliderTransition = trigger('homeSliderTransition', [
+  transition(':enter', [
+    style({ transform: 'translateX(-100%)' }),
+    animate('5s linear', style({ transform: 'translateX(0%)' })),
+  ])
+]);
 
 export const visibilityTransition =  trigger('visibilityTransition', [
   state('visible', style({opacity: 1})),
