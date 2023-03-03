@@ -1,8 +1,12 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoadingMaskService } from './loading-mask.service';
+import { CommonModule } from '@angular/common';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 
 @Component({
+  standalone: true,
+  imports: [ CommonModule, MatProgressSpinnerModule ],
   selector: 'milo-loading-mask',
   templateUrl: './loading-mask.component.html',
   styleUrls: ['./loading-mask.component.scss']

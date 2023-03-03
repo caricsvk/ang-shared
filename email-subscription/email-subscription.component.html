@@ -12,7 +12,8 @@
   </mat-form-field>
   <button mat-stroked-button color="primary">
     <span *ngIf="!isSavingInProgress">{{buttonText}}</span>
-    <mat-spinner *ngIf="isSavingInProgress" style="margin: auto" [strokeWidth]="2" [diameter]="20"></mat-spinner>
+<!--    <mat-spinner *ngIf="isSavingInProgress" style="margin: auto" [strokeWidth]="2" [diameter]="20"></mat-spinner>-->
+    <span *ngIf="isSavingInProgress" style="margin: auto">please wait...</span>
   </button>
 </form>
 
