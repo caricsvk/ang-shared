@@ -19,15 +19,11 @@ export class MessagingService {
     return this.dialog.open(ConfirmationDialogComponent, {width: '400px', data});
   }
 
-  showDialog(component: Type<any> | TemplateRef<any>, data: any = null): MatDialogRef<any, any> {
-    return this.dialog.open(component, {
-      width: '90%',
-      maxWidth: '800px',
-      minHeight: '400px',
-      maxHeight: '94%',
-      panelClass: 'milo-overlay-pane',
-      data
-    });
+  showDialog(
+    component: Type<any> | TemplateRef<any>, data: any = null, config = new MiloDialogConfig()
+  ): MatDialogRef<any, any> {
+    config.data = data;
+    return this.dialog.open(component, config);
   }
 
   showFloatingMessage(message: string, action?: string, duration = MessageDuration.Medium): MatSnackBarRef<TextOnlySnackBar> {
@@ -39,4 +35,18 @@ export enum MessageDuration {
   Short = 2000,
   Medium = 3500,
   Long = 5000
+}
+
+export class MiloDialogConfig {
+  width = '90%';
+  maxWidth = '800px';
+  minHeight = '400px';
+  maxHeight = '94%';
+  panelClass = 'milo-overlay-pane';
+  data: any;
+
+  withMaxWidth(maxWidth: string) {
+    this.maxWidth = maxWidth;
+    return this;
+  }
 }
