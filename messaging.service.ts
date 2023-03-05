@@ -26,8 +26,9 @@ export class MessagingService {
     return this.dialog.open(component, config);
   }
 
-  showFloatingMessage(message: string, action?: string, duration = MessageDuration.Medium): MatSnackBarRef<TextOnlySnackBar> {
-    return this.matSnackBar.open(message, action, {duration});
+  showFloatingMessage(message: string, action?: string, duration = MessageDuration.Medium,
+                      verticalPosition: 'top' | 'bottom' = 'bottom'): MatSnackBarRef<TextOnlySnackBar> {
+    return this.matSnackBar.open(message, action, {duration, verticalPosition});
   }
 }
 
