@@ -43,13 +43,14 @@ export const footerRouterTransition = trigger('footerRouterTransition', [
     // transform: 'translateY(0)'
   })),
   transition('* => enter', [
-    style({transform: 'translateY(100%)', opacity: 0, position: 'absolute'}),
+    style({transform: 'translateY(100%)', opacity: 0, position: 'absolute', display: 'block'}),
     animate('500ms', style({transform: 'translateY(0)', opacity: 1})),
     style({opacity: 0, display: 'block'}),
   ]),
   transition('* => leave', [
     style({opacity: 0, display: 'none'}),
-    animate('0ms', style({opacity: 0, display: 'none'})),
+    animate('0ms', style({opacity: 0})),
+    style({display: 'none'})
   ]),
   // state('leave', style({
   //   opacity: 0,
@@ -97,7 +98,7 @@ export const appearingTransition = trigger('appearingTransition', [
 export const homeSliderTransition = trigger('homeSliderTransition', [
   transition(':enter', [
     style({ transform: 'translateX(-100%)' }),
-    animate('5s linear', style({ transform: 'translateX(0%)' })),
+    animate('7s linear', style({ transform: 'translateX(0%)' })),
   ])
 ]);
 
