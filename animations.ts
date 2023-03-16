@@ -1,4 +1,13 @@
-import { animate, group, query, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  AnimationTransitionMetadata,
+  group,
+  query,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
 
 export const routerAnimationDuration = 500;
 
@@ -59,25 +68,6 @@ export const footerRouterTransition = trigger('footerRouterTransition', [
   // })),
 ]);
 
-export const downTransition = trigger('downTransition', [
-  transition('void => up', [
-    style({transform: 'translateY(140%)'}),
-    animate('500ms')
-  ]),
-  transition('up => void', [
-    style({transform: 'translateY(0%)'}),
-    animate('500ms', style({transform: 'translateY(-140%)'}))
-  ]),
-  transition('void => down', [
-    style({transform: 'translateY(-140%)'}),
-    animate('500ms')
-  ]),
-  transition('down => void', [
-    style({transform: 'translateY(0%)'}),
-    animate('500ms', style({transform: 'translateY(140%)'}))
-  ])
-]);
-
 export const inOutTransition = trigger('inOutAnimation', [
   transition(':enter', [
     style({ opacity: 0 }),
@@ -98,7 +88,7 @@ export const appearingTransition = trigger('appearingTransition', [
 export const homeSliderTransition = trigger('homeSliderTransition', [
   transition(':enter', [
     style({ transform: 'translateX(-100%)' }),
-    animate('7s linear', style({ transform: 'translateX(0%)' })),
+    animate('6s linear', style({ transform: 'translateX(0%)' })),
   ])
 ]);
 
@@ -134,4 +124,92 @@ export const miloEnterLeaveTransition = trigger('miloEnterLeaveTransition', [
   ]),
 ]);
 
-export type MiloTransition = 'appearing' | 'right-to-left' | 'bottom-to-top';
+export type MiloTransitionType = 'appearing' | 'right-to-left' | 'bottom-to-top';
+
+export class MiloTransition {
+
+  constructor(
+    private name: string,
+    private timings = '500ms',
+    private startOpacity = '0',
+    private transitions: AnimationTransitionMetadata[] = []
+  ) {
+  }
+
+  build() {
+    return trigger(this.name, this.transitions);
+  }
+
+  allSides(timings?: string) {
+    return this.up(timings).down(timings).right(timings).left(timings);
+  }
+
+  vertical(timings?: string) {
+    return this.up(timings).down(timings);
+  }
+
+  horizontal(timings?: string) {
+    return this.right(timings).left(timings);
+  }
+
+  up(timings?: string) {
+    this.transitions.push(
+      transition('* => up', [
+        style({transform: 'translateY(140%)', opacity: this.startOpacity}),
+        animate(timings || this.timings)
+      ])
+    );
+    return this;
+  }
+
+  down(timings?: string) {
+    this.transitions.push(
+      transition('* => down', [
+        style({transform: 'translateY(-140%)', opacity: this.startOpacity}),
+        animate(timings || this.timings)
+      ])
+    );
+    return this;
+  }
+
+  right(timings?: string) {
+    this.transitions.push(
+      transition('* => right', [
+        style({transform: 'translateX(-140%)', opacity: this.startOpacity}),
+        animate(timings || this.timings)
+      ])
+    );
+    return this;
+  }
+
+  left(timings?: string) {
+    this.transitions.push(
+      transition('* => left', [
+        style({transform: 'translateX(140%)', opacity: this.startOpacity}),
+        animate(timings || this.timings)
+      ])
+    );
+    return this;
+  }
+
+  upVoid(timings?: string) {
+    this.transitions.push(
+      transition('up => void', [
+        style({transform: 'translateY(0%)'}),
+        animate(timings || this.timings, style({transform: 'translateY(-140%)', opacity: this.startOpacity}))
+      ])
+    );
+    return this;
+  }
+
+  downVoid(timings?: string) {
+    this.transitions.push(
+      transition('down => void', [
+        style({transform: 'translateY(0%)'}),
+        animate(timings || this.timings, style({transform: 'translateY(140%)', opacity: this.startOpacity}))
+      ])
+    );
+    return this;
+  }
+
+}
