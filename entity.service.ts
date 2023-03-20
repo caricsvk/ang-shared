@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -30,8 +30,11 @@ export abstract class EntityService<T> {
       .pipe(map((json: any): number => json.value));
   }
 
-  fetchSearch(params = new HttpParams()): Observable<T[]> {
-    return this.httpClient.get<any[]>(this.getApiPath(), {params})
+  fetchSearch(
+    params = new HttpParams(),
+    headers?: HttpHeaders | {[header: string]: string | string[];}
+  ): Observable<T[]> {
+    return this.httpClient.get<any[]>(this.getApiPath(), {params, headers})
       .pipe(map((items: any[]): T[] => items.map(obj => this.createT(obj))));
   }
 
