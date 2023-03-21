@@ -49,6 +49,7 @@ export class Load {
     };
     fileElement.onerror = function () {
       delete Load.inProgressFiles[file.src];
+      file.error();
       setTimeout(function () {
         // self.ccLoad(src);
       }, 2000);
@@ -104,12 +105,17 @@ class DependentFile {
     public dependencies: DependentFile[] = [],
     private callback: Function = function () {}
   ) {
-    this.promise = new Promise(resolve => this.promiseResolve = resolve);
+    this.promise = new Promise((resolve, error) => {
+      this.promiseResolve = resolve;
+      this.error = error;
+    });
   }
 
   setCallback(callback: Function) {
     this.callback = callback
   }
+
+  error: Function;
 
   resolve() {
     if (typeof this.callback === "function") {
