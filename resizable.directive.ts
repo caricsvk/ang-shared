@@ -8,6 +8,7 @@ export class ResizableDirective implements OnInit {
   @Input() resizableGrabWidth = 35;
   @Input() resizableMinWidth = 90;
   @Input() delay = 0;
+  @Input() autoDrag = true;
 
   @Output() resized = new EventEmitter<Resize>();
   @Output() dropped = new EventEmitter<DragAndDrop>();
@@ -124,7 +125,9 @@ export class ResizableDirective implements OnInit {
       if (this.dragging) {
         const translateX = clientX - this.initialParams.clientX;
         const translateY = clientY - this.initialParams.clientY;
-        nativeEl.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        if (this.autoDrag) {
+          nativeEl.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        }
         this.dragged.emit({x: clientX, y: clientY});
       }
 
