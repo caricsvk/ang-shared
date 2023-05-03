@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppHelper } from './app-helper';
 import { environment } from '../../environments/environment';
-
-// import { AppHelper } from "../app-helper";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +7,6 @@ import { environment } from '../../environments/environment';
 export class AnalyticsService {
 
   private firstPageView = true;
-  private readonly trackingTurnedOn: boolean;
   private get gtag(): any {
     return this.getWindowProperty('gtag');
   }
@@ -19,10 +15,9 @@ export class AnalyticsService {
   }
 
   constructor() {
-    this.trackingTurnedOn = AppHelper.isLiveProductionEnvironment(environment.productionDomain);
   }
 
-  sendPageView(path: string): void {
+  sendPageView(gaIds: string[]): void {
 
     if (this.firstPageView) {
       this.firstPageView = false;
@@ -30,24 +25,31 @@ export class AnalyticsService {
     }
 
     setTimeout(() => {
-      if (this.trackingTurnedOn) {
-        this.gtag('config', 'G-RJ7XPWPP1G');
-        this.gtag('config', 'UA-52808031-9');
-        if (this.fbq) {
-          this.fbq('track', 'PageView');
+      try {
+        if (environment.production) {
+          gaIds.forEach(id => this.gtag('config', id));
+          if (this.fbq) {
+            this.fbq('track', 'PageView');
+          }
+        } else {
+          console.warn('caught sendPageView', gaIds, location.pathname, location.href, document.title);
         }
-      } else {
-        console.log('sent pageview', location.pathname, location.href, document.title);
+      } catch (e) {
+        // console.warn('caught sendPageView', e);
       }
     }, 100);
   }
 
   sendEvent(eventName: string, params = {}): void {
     setTimeout(() => {
-      if (this.trackingTurnedOn) {
-        this.gtag('event', eventName, params);
-      } else {
-        // console.log('sendEvent', eventName, params);
+      try {
+        if (environment.productionDomain) {
+          this.gtag('event', eventName, params);
+        } else {
+          // console.log('sendEvent', eventName, params);
+        }
+      } catch (e) {
+        console.warn('caught sendEvent', e);
       }
     }, 1000);
   }
