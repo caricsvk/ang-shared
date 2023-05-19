@@ -17,6 +17,19 @@ export class AppHelper {
     });
   }
 
+  public static getCircularReplacer() {
+      const cache = new Set();
+      return function (key: string, value: any) {
+        if (typeof value === 'object' && value !== null) {
+          if (cache.has(value)) {
+            return '[Circular Reference]';
+          }
+          cache.add(value);
+        }
+        return value;
+      };
+  }
+
   private static fallbackCopyTextToClipboard(text: string) {
     const textArea = document.createElement("textarea");
     textArea.value = text;

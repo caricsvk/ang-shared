@@ -1,32 +1,41 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { AppHelper } from './app-helper';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AnalyticsService {
+export abstract class AnalyticsService {
 
   private firstPageView = true;
+
   private get gtag(): any {
     return this.getWindowProperty('gtag');
   }
+
   private get fbq(): any {
     return this.getWindowProperty('fbq');
   }
 
-  constructor() {
+  protected abstract getApiPath(): string;
+
+  constructor(
+    protected httpClient: HttpClient
+  ) {
   }
 
   sendPageView(gaIds: string[]): void {
-
     if (this.firstPageView) {
       this.firstPageView = false;
+      this.log('pageview', {first: true});
       return;
     }
 
     setTimeout(() => {
       try {
         if (environment.production) {
+          this.log('pageview', {first: false});
           gaIds.forEach(id => this.gtag('config', id));
           if (this.fbq) {
             this.fbq('track', 'PageView');
@@ -43,7 +52,8 @@ export class AnalyticsService {
   sendEvent(eventName: string, params = {}): void {
     setTimeout(() => {
       try {
-        if (environment.productionDomain) {
+        if (environment.production) {
+          this.log(eventName, params);
           this.gtag('event', eventName, params);
         } else {
           // console.log('sendEvent', eventName, params);
@@ -52,6 +62,19 @@ export class AnalyticsService {
         console.warn('caught sendEvent', e);
       }
     }, 1000);
+  }
+
+  async log(eventName: string, customParams = {}) {
+    const params = new HttpParams().set('url', location.href);
+    try {
+      return await this.httpClient.post(
+        this.getApiPath() + `log/event`,
+        'event: ' + eventName + "; " + JSON.stringify(customParams, AppHelper.getCircularReplacer()),
+        {params}
+      ).toPromise();
+    } catch (e) { // suppressed to prevent recursion
+      return null;
+    }
   }
 
   // setSeoTags(route: RoutePath, latestUrlPath: string): void {
