@@ -29,8 +29,8 @@ export class ErrorHandlerService {
     let data;
     switch (errorCode) {
       case 401:
-        data = new ConfirmationDialogData('Session expired', 'Log in to continue, or start from scratch not logged.',
-          'Log In', 'Start from scratch');
+        data = new ConfirmationDialogData('You are not logged in', 'You have to be logged in to perform this action.',
+          'Log In', 'Nevermind');
         break;
       case 403:
         data = new ConfirmationDialogData('Access denied', 'Your permissions are not properly set to see this page.', 'Go Back', null);
