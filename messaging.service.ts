@@ -2,6 +2,7 @@ import { Injectable, TemplateRef, Type } from '@angular/core';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarRef as MatSnackBarRef, LegacyTextOnlySnackBar as TextOnlySnackBar } from '@angular/material/legacy-snack-bar';
 import { ConfirmationDialogComponent, ConfirmationDialogData } from './confirmation-dialog/confirmation-dialog.component';
+import { DialogPosition, MatDialogConfig } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class MessagingService {
   }
 
   showDialog(
-    component: Type<any> | TemplateRef<any>, data: any = null, config = new MiloDialogConfig()
+    component: Type<any> | TemplateRef<any>, data: any = null, config: MatDialogConfig = new MiloDialogConfig()
   ): MatDialogRef<any, any> {
     config.data = data;
     return this.dialog.open(component, config);
@@ -38,13 +39,14 @@ export enum MessageDuration {
   Long = 5000
 }
 
-export class MiloDialogConfig {
+export class MiloDialogConfig extends MatDialogConfig {
   width = '90%';
   maxWidth = '800px';
   minHeight = '400px';
   maxHeight = '94%';
   panelClass = 'milo-overlay-pane';
   data: any;
+  backdropClass = 'milo-backdrop-class';
 
   withMaxWidth(maxWidth: string) {
     this.maxWidth = maxWidth;
