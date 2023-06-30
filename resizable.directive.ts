@@ -9,6 +9,7 @@ export class ResizableDirective implements OnInit {
   @Input() resizableMinWidth = 90;
   @Input() delay = 0;
   @Input() autoDrag = true;
+  @Input() handleTouchEvents = false;
 
   @Output() resized = new EventEmitter<Resize>();
   @Output() dropped = new EventEmitter<DragAndDrop>();
@@ -92,9 +93,11 @@ export class ResizableDirective implements OnInit {
       this.action.emit(ResizableAction.Initialized);
 
       document.addEventListener('mousemove', onMouseMove, true);
-      document.addEventListener('touchmove', onMouseMove, true);
       document.addEventListener('mouseup', onClickEnd, true);
-      document.addEventListener('touchend', onClickEnd, true);
+      if (this.handleTouchEvents) {
+        document.addEventListener('touchmove', onMouseMove, true);
+        document.addEventListener('touchend', onClickEnd, true);
+      }
 
       this.initialParams = new InitialParams(
         nativeEl.style.width,
@@ -199,9 +202,11 @@ export class ResizableDirective implements OnInit {
       nativeEl.style.transform = '';
 
       document.removeEventListener('mousemove', onMouseMove, true);
-      document.removeEventListener('touchmove', onMouseMove, true);
       document.removeEventListener('mouseup', onClickEnd, true);
-      document.removeEventListener('touchend', onClickEnd, true);
+      if (this.handleTouchEvents) {
+        document.removeEventListener('touchmove', onMouseMove, true);
+        document.removeEventListener('touchend', onClickEnd, true);
+      }
       this.resizing = false;
       this.resizingVertical = null;
       this.resizingHorizontal = null;
@@ -218,7 +223,9 @@ export class ResizableDirective implements OnInit {
     };
 
     nativeEl.addEventListener('mousedown', (event: any) => onClickStart(event, 'mouseup'), true);
-    nativeEl.addEventListener('touchstart', (event: any) => onClickStart(event, 'touchend'), true);
+    if (this.handleTouchEvents) {
+      nativeEl.addEventListener('touchstart', (event: any) => onClickStart(event, 'touchend'), true);
+    }
     // nativeEl.addEventListener('mousemove', mouseMove, true);
   }
 
