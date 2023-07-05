@@ -28,8 +28,11 @@ export class ResizableDirective implements OnInit {
   private mouseUpTouchLock = false;
 
   constructor(private el: ElementRef) {
+  }
 
-    const nativeEl = el.nativeElement;
+  ngOnInit(): void {
+
+    const nativeEl = this.el.nativeElement;
 
     const setupCursor = (event: Event) => {
       if (this.inResizeRegion(getClientX(event), getClientY(event))) {
@@ -227,9 +230,6 @@ export class ResizableDirective implements OnInit {
       nativeEl.addEventListener('touchstart', (event: any) => onClickStart(event, 'touchend'), true);
     }
     // nativeEl.addEventListener('mousemove', mouseMove, true);
-  }
-
-  ngOnInit(): void {
     // this.nativeEl.style['border-right'] = this.resizableGrabWidth + 'px solid darkgrey';
   }
 
