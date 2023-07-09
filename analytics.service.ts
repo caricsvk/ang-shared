@@ -9,6 +9,7 @@ import { AppHelper } from './app-helper';
 export abstract class AnalyticsService {
 
   private firstPageView = true;
+  private static readonly LOCAL_STORAGE_STARTTIME_KEY = 'milo_analytics_service_id';
 
   private get gtag(): any {
     return this.getWindowProperty('gtag');
@@ -26,9 +27,11 @@ export abstract class AnalyticsService {
   }
 
   sendPageView(gaIds: string[]): void {
-    if (this.firstPageView) {
+    if (environment.production && this.firstPageView) {
       this.firstPageView = false;
-      this.log('pageview', {first: true});
+      const width = window.innerWidth || document.documentElement?.clientWidth || document.body.clientWidth;
+      const height = window.innerHeight|| document.documentElement?.clientHeight|| document.body.clientHeight;
+      this.log('pageview', {first: true, width, height});
       return;
     }
 
@@ -66,10 +69,11 @@ export abstract class AnalyticsService {
 
   async log(eventName: string, customParams = {}) {
     const params = new HttpParams().set('url', location.href);
+    const firstEncounterTime = this.getFirstEncounterTime();
     try {
       return await this.httpClient.post(
         this.getApiPath() + `log/event`,
-        'event: ' + eventName + "; " + JSON.stringify(customParams, AppHelper.getCircularReplacer()),
+        `initialized: ${firstEncounterTime}; event: ${eventName};` + JSON.stringify(customParams, AppHelper.getCircularReplacer()),
         {params}
       ).toPromise();
     } catch (e) { // suppressed to prevent recursion
@@ -107,5 +111,18 @@ export abstract class AnalyticsService {
   private getWindowProperty(property: string): () => {} {
     // @ts-ignore
     return window[property] ? window[property] : () => {};
+  }
+
+  private getFirstEncounterTime() {
+    try {
+      let time = window.localStorage.getItem(AnalyticsService.LOCAL_STORAGE_STARTTIME_KEY);
+      if (!time) {
+        time = new Date().getTime().toString(10);
+        window.localStorage.setItem(AnalyticsService.LOCAL_STORAGE_STARTTIME_KEY, time);
+      }
+      return time;
+    } catch (e) {
+      return 'undefined';
+    }
   }
 }
