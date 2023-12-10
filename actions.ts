@@ -37,8 +37,7 @@ export class DeferredAction<T> extends BasicAction {
       this.data = await deferred;
       this.status = 200;
     } catch (e: any) {
-      const error = e as HttpErrorResponse;
-      this.status = error.status;
+      this.status = e instanceof HttpErrorResponse ? e.status : 500;
       throw e;
     }
     return this.data;
