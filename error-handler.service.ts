@@ -4,9 +4,8 @@ import {
   ConfirmationDialogData,
   ConfirmationDialogOnCloseResult
 } from './confirmation-dialog/confirmation-dialog.component';
-import { AppHelper } from './app-helper';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Observable, Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'

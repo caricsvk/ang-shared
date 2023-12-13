@@ -1,8 +1,7 @@
 import { Injectable, TemplateRef, Type } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarRef as MatSnackBarRef, LegacyTextOnlySnackBar as TextOnlySnackBar } from '@angular/material/legacy-snack-bar';
 import { ConfirmationDialogComponent, ConfirmationDialogData } from './confirmation-dialog/confirmation-dialog.component';
-import { DialogPosition, MatDialogConfig } from '@angular/material/dialog';
+import { DialogPosition, MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -40,13 +39,14 @@ export enum MessageDuration {
 }
 
 export class MiloDialogConfig extends MatDialogConfig {
-  width = '90%';
-  maxWidth = '800px';
-  minHeight = '400px';
-  maxHeight = '94%';
-  panelClass = 'milo-overlay-pane';
-  data: any;
-  backdropClass = 'milo-backdrop-class';
+
+  override width = '90%';
+  override maxWidth = '800px';
+  override minHeight = '400px';
+  override maxHeight = '94%';
+  override panelClass = 'milo-overlay-pane';
+  override data: any;
+  override backdropClass = 'milo-backdrop-class';
 
   withMaxWidth(maxWidth: string) {
     this.maxWidth = maxWidth;
