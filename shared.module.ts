@@ -41,6 +41,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
   ],
   exports: [
+    CommonModule,
     HttpClientModule,
     RouterModule,
     HttpClientModule,
