@@ -7,6 +7,6 @@ export enum Ng4FilesStatus {
 }
 
 export interface Ng4FilesSelected {
-  status: Ng4FilesStatus;
+  status: Ng4FilesStatus | 500;
   files: File[];
 }

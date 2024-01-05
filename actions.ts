@@ -2,9 +2,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 export class BasicAction {
   message = '';
-  status: null | 'progress' | number = null;
+  status: null | -2 | number = null; // - 2 = progress
 
-  setStatus(status: 'progress' | number) {
+  setStatus(status: -2 | number) {
     this.status = status;
   }
 
@@ -33,7 +33,7 @@ export class DeferredAction<T> extends BasicAction {
 
   async set(deferred: Promise<T>) {
     try {
-      this.status = 'progress';
+      this.status = -2;
       this.data = await deferred;
       this.status = 200;
     } catch (e: any) {
