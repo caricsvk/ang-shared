@@ -7,14 +7,18 @@ export class DragAndDropSorting<T> {
   private currentPositionTopLeft: Coordinates;
   private initialEvent: Coordinates = null;
 
-  constructor(private items: T[]) {
+  constructor(private items?: T[]) {
   }
 
-  dragStarted(event: ResizableAction, element: HTMLElement, draggingShortcut: T) {
+  isBeingDragged() {
+    return !!this.draggedItem;
+  }
+
+  dragStarted(event: ResizableAction, element: HTMLElement, draggedItem: T) {
     if (event === ResizableAction.Dragging) {
       element.style.zIndex = '-1';
       this.initialEvent = null;
-      this.draggedItem = draggingShortcut;
+      this.draggedItem = draggedItem;
       this.initialPositionTopLeft = element.getBoundingClientRect();
       this.currentPositionTopLeft = this.initialPositionTopLeft;
     }
@@ -36,11 +40,24 @@ export class DragAndDropSorting<T> {
     element.style.transform = `translate(${x}px, ${y}px`;
   }
 
-  shortcutMouseEnter(index: number, element: HTMLElement) {
+  mouseEnter(element: HTMLElement, index?: number) {
     if (this.draggedItem) {
       this.currentPositionTopLeft = element.getBoundingClientRect()
-      this.items.splice(index, 0, this.items.splice(this.items.indexOf(this.draggedItem), 1)[0]);
+      if (this.items && typeof index === 'number') {
+        const draggedItem = this.removeDraggedItem();
+        this.items.splice(index, 0, draggedItem);
+      }
+      return true;
     }
+    return false;
+  }
+
+  removeDraggedItem() {
+    return this.items.splice(this.items.indexOf(this.draggedItem), 1)[0];
+  }
+
+  getDraggedItem() {
+    return this.draggedItem;
   }
 }
 
