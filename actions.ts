@@ -1,8 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export class BasicAction {
   message = '';
   status: null | -2 | number = null; // - 2 = progress
+  type: string;
 
   setStatus(status: -2 | number) {
     this.status = status;
@@ -41,6 +43,46 @@ export class DeferredAction<T> extends BasicAction {
       throw e;
     }
     return this.data;
+  }
+}
+
+export class DeferredActions<T> extends BasicAction {
+
+  private updates: Subject<DeferredActions<T>>;
+
+  initialCount = 0;
+  done = 0;
+  succeeded: T[] = [];
+  failed: any[] = [];
+
+  set(deferred: Promise<T>[]) {
+    this.updates = new BehaviorSubject<DeferredActions<T>>(this);
+    this.initialCount = deferred.length;
+    this.done = 0;
+    this.succeeded = [];
+    this.failed = [];
+
+    deferred.forEach(defer$ => this.processDefer(defer$));
+    return this.updates.asObservable();
+  }
+
+  isCompleted() {
+    return this.done === this.initialCount;
+  }
+
+  private async processDefer(defer: Promise<T>) {
+    try {
+      const response = await defer;
+      this.succeeded.push(response);
+    } catch (e) {
+      this.failed.push(e);
+    }
+    this.done ++;
+    this.updates.next(this);
+    if (this.done == this.initialCount) {
+      this.setStatus(this.succeeded.length == this.initialCount ? 200 : 500);
+      this.updates.complete();
+    }
   }
 }
 
