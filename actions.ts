@@ -55,19 +55,29 @@ export class DeferredActions<T> extends BasicAction {
   succeeded: T[] = [];
   failed: any[] = [];
 
-  set(deferred: Promise<T>[]) {
+  set(deferred: Promise<T>[], parallelMax = 10) {
     this.updates = new BehaviorSubject<DeferredActions<T>>(this);
     this.initialCount = deferred.length;
     this.done = 0;
     this.succeeded = [];
     this.failed = [];
 
-    deferred.forEach(defer$ => this.processDefer(defer$));
+    this.runDeferred(deferred, parallelMax);
     return this.updates.asObservable();
   }
 
   isCompleted() {
     return this.done === this.initialCount;
+  }
+
+  private async runDeferred(deferred: Promise<T>[], parallelMax: number) {
+    const inProgress: Promise<any>[] = [];
+    for (const defer of deferred) {
+      while (inProgress.length >= parallelMax) {
+        await inProgress.shift();
+      }
+      inProgress.push(this.processDefer(defer));
+    }
   }
 
   private async processDefer(defer: Promise<T>) {
