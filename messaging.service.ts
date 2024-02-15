@@ -43,7 +43,7 @@ export class MiloDialogConfig extends MatDialogConfig {
   override width = '90%';
   override maxWidth = '800px';
   override minHeight = '400px';
-  override maxHeight = '94%';
+  override maxHeight = '94vh';
   override panelClass = 'milo-overlay-pane';
   override data: any;
   override backdropClass = 'milo-backdrop-class';
