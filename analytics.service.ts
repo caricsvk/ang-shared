@@ -26,19 +26,23 @@ export abstract class AnalyticsService {
   ) {
   }
 
-  sendPageView(gaIds: string[]): void {
+  sendPageView(gaIds: string[], log = true): void {
     if (environment.production && this.firstPageView) {
       this.firstPageView = false;
       const width = window.innerWidth || document.documentElement?.clientWidth || document.body.clientWidth;
       const height = window.innerHeight|| document.documentElement?.clientHeight|| document.body.clientHeight;
-      this.log('pageview', {first: true, width, height});
+      if (log) {
+        this.log('pageview', {first: true, width, height});
+      }
       return;
     }
 
     setTimeout(() => {
       try {
-        if (environment.production) {
+        if (log) {
           this.log('pageview', {first: false});
+        }
+        if (environment.production) {
           gaIds.forEach(id => this.gtag('config', id));
           if (this.fbq) {
             this.fbq('track', 'PageView');
