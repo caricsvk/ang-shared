@@ -15,7 +15,7 @@ export class EmailSubscriptionComponent {
   @Input() bottomText = '';
   @Input() buttonText = 'Subscribe';
   @Input() apiPath = '/api/user/subscribe';
-  @Input() successText = 'Thank you for subscription.';
+  @Input() successText = 'Thank you for subscribing! We\'ll keep you posted. Stay tuned!';
 
   isSavingInProgress = false;
   savingResponse = '';
