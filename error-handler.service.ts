@@ -37,14 +37,16 @@ export class ErrorHandlerService {
         break;
     }
     if (errorCode >= 500) {
-      data = new ConfirmationDialogData('Unexpected server error', 'We are sorry, an unexpected server error has occurred.', 'Reload App', 'Continue');
+      data = new ConfirmationDialogData('Unexpected server error',
+        'We are sorry, an unexpected server error has occurred. Dialog will auto-close in 8 seconds.', 'Reload App', 'Ignore');
     }
 
     if (!data) {
       return;
     }
 
-    this.dialog.open(ConfirmationDialogComponent, {id: 'errorDialog', width: '400px', data}).afterClosed().subscribe(
+    const dialog = this.dialog.open(ConfirmationDialogComponent, {id: 'errorDialog', width: '400px', data});
+    dialog.afterClosed().subscribe(
       (response: ConfirmationDialogOnCloseResult) => {
         this.openedDialogErrorCode = null;
         switch (errorCode) {
@@ -60,6 +62,10 @@ export class ErrorHandlerService {
             }
         }
       });
+
+    if (errorCode >= 500) {
+      setTimeout(() => dialog.close(), 1000*10);
+    }
 
     this.openedDialogErrorCode = errorCode;
   }
