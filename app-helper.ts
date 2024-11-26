@@ -5,6 +5,14 @@ export class AppHelper {
     return currentHost.indexOf(domain) >= 0;
   }
 
+  public static getWeekNumber(date: Date) {
+    const currentDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const yearStart = new Date(Date.UTC(currentDate.getUTCFullYear(), 0, 1));
+    const dayOfYear = Math.floor((currentDate.getTime() - yearStart.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+    return Math.ceil(dayOfYear / 7);
+  }
+
+
   public static copyTextToClipboard(text: string) {
     if (!navigator.clipboard) {
       this.fallbackCopyTextToClipboard(text);
