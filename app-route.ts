@@ -14,7 +14,7 @@ export abstract class AppRoute {
   abstract getAllOutlets(): string[];
 
   clearThisRouteOutlet(extras?: NavigationExtras): Promise<boolean> {
-    extras = extras || {};
+    extras = extras || this.extras;
     extras.replaceUrl = true;
     if (! this.outlet) {
       throw Error('this route is main route, cannot be cleared');
