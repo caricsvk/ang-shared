@@ -12,15 +12,19 @@ export abstract class ServiceWorkerService<P extends PushSubscription, T extends
   constructor(
     private entityService: EntityService<P>,
   ) {
-    if ('serviceWorker' in navigator) {
-      // ,  {scope: '/'}
-      navigator.serviceWorker.register(this.getServiceWorkerScriptPath()).then(registration => {
-        // console.log('Service Worker Registered!', registration);
-        this.registration = registration;
-      });
-      navigator.serviceWorker.addEventListener(
-        'message', (event: MessageEvent<T>) => this.processMessage(event)
-      );
+    try {
+      if ('serviceWorker' in navigator) {
+        // ,  {scope: '/'}
+        navigator.serviceWorker.register(this.getServiceWorkerScriptPath()).then(registration => {
+          console.log('Service Worker Register requested...', registration);
+          this.registration = registration;
+        });
+        navigator.serviceWorker.addEventListener(
+          'message', (event: MessageEvent<T>) => this.processMessage(event)
+        );
+      }
+    } catch (e) {
+      console.warn('caught ServiceWorkerService initialization error:', e);
     }
   }
 
