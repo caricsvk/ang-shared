@@ -70,10 +70,16 @@ export abstract class AnalyticsService {
   async log(eventName: string, customParams = {}) {
     const params = new HttpParams().set('url', location.href);
     const firstEncounterTime = this.getFirstEncounterTime();
+    let message = 'AnalyticsService.log customParams initialization failed';
+    try {
+      message = customParams.toString();
+    } catch (e) { } // suppressed
+    try {
+      message = JSON.stringify(customParams, AppHelper.getCircularReplacer());
+    } catch (e) { } // suppressed
     try {
       return await this.httpClient.post(
-        this.getApiPath() + `log/event`,
-        `initialized: ${firstEncounterTime}; event: ${eventName};` + JSON.stringify(customParams, AppHelper.getCircularReplacer()),
+        this.getApiPath() + `log/event`, `initialized: ${firstEncounterTime}; event: ${eventName}; ${message}`,
         {params}
       ).toPromise();
     } catch (e) { // suppressed to prevent recursion
