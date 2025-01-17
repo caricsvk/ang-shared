@@ -63,7 +63,7 @@ export class ErrorHandlerService {
         }
       });
 
-    if (errorCode >= 500) {
+    if (errorCode >= 400) {
       setTimeout(() => dialog.close(), 1000*10);
     }
 
