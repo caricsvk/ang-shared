@@ -83,6 +83,7 @@ export abstract class AnalyticsService {
         {params}
       ).toPromise();
     } catch (e) { // suppressed to prevent recursion
+      console.error("caught analyticsService.log error", e)
       return null;
     }
   }
