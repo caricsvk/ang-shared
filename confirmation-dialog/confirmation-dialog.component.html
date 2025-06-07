@@ -2,12 +2,18 @@
 <div mat-dialog-content>
   <p [innerHTML]="subtitle"></p>
   <div *ngFor="let customValue of data.customValues; let index = index">
-    <label *ngIf="customValue.getType() === 'checkbox'">
+    <label *ngIf="customValue.type === 'checkbox'">
       <input type="checkbox" [(ngModel)]="customValue.value" />
     </label>
-    <mat-form-field>
+    <mat-form-field *ngIf="customValue.type === 'select'">
       <mat-label>{{customValue.label}}</mat-label>
-      <input [name]="'val' + index" *ngIf="customValue.getType() === 'text'" matInput type="text" [(ngModel)]="customValue.value" />
+      <mat-select [(ngModel)]="customValue.value" [name]="'select_' + index">
+        <mat-option *ngFor="let value of customValue.values;" [value]="value">{{value}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="customValue.type === 'text'">
+      <mat-label>{{customValue.label}}</mat-label>
+      <input [name]="'val' + index" matInput type="text" [(ngModel)]="customValue.value" />
     </mat-form-field>
   </div>
 </div>

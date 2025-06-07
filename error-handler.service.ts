@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import {
-  ConfirmationDialogComponent,
+  ConfirmationDialogComponent, ConfirmationDialogCustomValue,
   ConfirmationDialogData,
   ConfirmationDialogOnCloseResult
 } from './confirmation-dialog/confirmation-dialog.component';
 import { AppHelper } from './app-helper';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Observable, Subject } from 'rxjs';
+import { StorageService } from "../storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ErrorHandlerService {
 
   private openedDialogErrorCode: number = null;
   private unauthorizedEventSubject = new Subject<ConfirmationDialogOnCloseResult>();
+  private readonly localStorageIgnoreErrorsKey = 'milo.error-handler.ignore';
 
   constructor(
     private dialog: MatDialog
@@ -36,9 +38,10 @@ export class ErrorHandlerService {
         data = new ConfirmationDialogData('Access denied', 'Your permissions are not properly set to see this page.', 'Go Back', null);
         break;
     }
-    if (errorCode >= 500) {
+    if (errorCode >= 500 && !this.suppressErrors()) {
+      const customValue = new ConfirmationDialogCustomValue('Ignore errors', ['for next 8 hours', 'for next 24 hours', 'for next 48 hours']);
       data = new ConfirmationDialogData('Unexpected server error',
-        'We are sorry, an unexpected server error has occurred. Dialog will auto-close in 8 seconds.', 'Reload App', 'Ignore');
+        'We are sorry, an unexpected server error has occurred. Dialog will auto-close in 8 seconds.', 'Reload App', 'Ignore', [customValue]);
     }
 
     if (!data) {
@@ -59,6 +62,8 @@ export class ErrorHandlerService {
           default:
             if (response && response.confirmed) {
               location.reload();
+            } else if (response && response.customValues[0].value) {
+              this.suppressErrors(response.customValues[0].value);
             }
         }
       });
@@ -81,4 +86,28 @@ export class ErrorHandlerService {
     // }
   }
 
+  private suppressErrors(time?: 'for next 8 hours' | 'for next 24 hours' | 'for next 48 hours') {
+    switch (time) {
+      case "for next 8 hours":
+        this.setIgnoreErrorsInHours(8);
+        break;
+      case "for next 24 hours":
+        this.setIgnoreErrorsInHours(24);
+        break;
+      case "for next 48 hours":
+        this.setIgnoreErrorsInHours(48);
+        break;
+    }
+    const ignoreErrors = this.getIgnoreErrorsInHours();
+    // console.log('suppressErrors', time, ignoreErrors, ignoreErrors.since && ignoreErrors.since + 0.01 * 60*60*1000 > new Date().getTime());
+    return ignoreErrors.since && ignoreErrors.since + ignoreErrors.hours * 60*60*1000 > new Date().getTime();
+  }
+
+  private setIgnoreErrorsInHours(hours: number) {
+    localStorage.setItem(this.localStorageIgnoreErrorsKey, JSON.stringify({ hours, since: new Date().getTime() }));
+  }
+
+  private getIgnoreErrorsInHours(): {hours: number, since: number} {
+    return JSON.parse(localStorage.getItem(this.localStorageIgnoreErrorsKey) || '{}');
+  }
 }

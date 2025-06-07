@@ -14,11 +14,15 @@ export class ConfirmationDialogData {
 
 export class ConfirmationDialogCustomValue {
   value: any;
+  type: 'text' | 'select' | 'checkbox' = null;
   constructor(
     public label: string,
     public values?: any[]
-  ) {}
-  getType(): string | null {
+  ) {
+    this.type = this.getType();
+  }
+
+  private getType(): 'text' | 'select' | 'checkbox' | null {
     if (this.values === undefined || this.values === null) {
       return 'text';
     } else if (this.values.length > 2) {
