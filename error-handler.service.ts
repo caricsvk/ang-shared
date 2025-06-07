@@ -39,7 +39,7 @@ export class ErrorHandlerService {
         break;
     }
     if (errorCode >= 500 && !this.suppressErrors()) {
-      const customValue = new ConfirmationDialogCustomValue('Ignore errors', ['for next 8 hours', 'for next 24 hours', 'for next 48 hours']);
+      const customValue = new ConfirmationDialogCustomValue('Ignore errors', ['for next 24 hours', 'for next 48 hours', 'for next 72 hours']);
       data = new ConfirmationDialogData('Unexpected server error',
         'We are sorry, an unexpected server error has occurred. Dialog will auto-close in 8 seconds.', 'Reload App', 'Ignore', [customValue]);
     }
@@ -86,16 +86,16 @@ export class ErrorHandlerService {
     // }
   }
 
-  private suppressErrors(time?: 'for next 8 hours' | 'for next 24 hours' | 'for next 48 hours') {
+  private suppressErrors(time?: 'for next 24 hours' | 'for next 48 hours' | 'for next 72 hours') {
     switch (time) {
-      case "for next 8 hours":
-        this.setIgnoreErrorsInHours(8);
-        break;
       case "for next 24 hours":
         this.setIgnoreErrorsInHours(24);
         break;
       case "for next 48 hours":
         this.setIgnoreErrorsInHours(48);
+        break;
+      case "for next 72 hours":
+        this.setIgnoreErrorsInHours(72);
         break;
     }
     const ignoreErrors = this.getIgnoreErrorsInHours();
