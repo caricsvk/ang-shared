@@ -16,8 +16,8 @@ export class MessagingService {
     private matSnackBar: MatSnackBar
   ) { }
 
-  showConfirmation(data: ConfirmationDialogData): MatDialogRef<unknown, any> {
-    return this.dialog.open(ConfirmationDialogComponent, {width: '400px', data});
+  showConfirmation(data: ConfirmationDialogData, width = '400px'): MatDialogRef<unknown, any> {
+    return this.dialog.open(ConfirmationDialogComponent, {width, data});
   }
 
   showDialog(
