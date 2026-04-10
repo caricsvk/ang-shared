@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AppHelper } from './app-helper';
+import { MgInterceptorHeaders, MiloHttpInterceptor } from './http.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +70,11 @@ export abstract class AnalyticsService {
 
   async log(eventName: string, customParams = {}) {
     const params = new HttpParams().set('url', location.href);
+    const headers = MiloHttpInterceptor.getHeaders(
+      MgInterceptorHeaders.EXCLUDE_FROM_COUNTING_REQUESTS_IN_PROGRESS,
+      MgInterceptorHeaders.PREVENT_DEFAULT_CANCELLATION,
+      MgInterceptorHeaders.PREVENT_DEFAULT_ERROR_HANDLING
+    );
     const firstEncounterTime = this.getFirstEncounterTime();
     let message = 'AnalyticsService.log customParams initialization failed';
     try {
@@ -80,7 +86,7 @@ export abstract class AnalyticsService {
     try {
       return await this.httpClient.post(
         this.getApiPath() + `log/event`, `initialized: ${firstEncounterTime}; event: ${eventName}; ${message}`,
-        {params}
+        {params, headers}
       ).toPromise();
     } catch (e) { // suppressed to prevent recursion
       console.error("caught analyticsService.log error", e)
