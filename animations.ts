@@ -28,6 +28,38 @@ export function createTransition(backwards = false): any {
   ];
 }
 
+export function createTransitionVertical(backwards = false): any {
+  return [
+    query(':enter, :leave', style({ position: 'fixed', width: '100%', height: '100%' }), { optional: true }),
+    group([
+      query(':enter', [
+        style({ transform: backwards ? 'translateY(-100%)' : 'translateY(100%)' }),
+        animate(routerAnimationDuration + 'ms ease-in-out', style({ transform: 'translateY(0%)' }))
+      ], { optional: true }),
+      query(':leave', [
+        style({ transform: 'translateY(0%)' }),
+        animate(routerAnimationDuration + 'ms ease-in-out', style({ transform: backwards ? 'translateY(100%)' : 'translateY(-100%)' }))
+      ], { optional: true }),
+    ])
+  ];
+}
+
+export function createTransitionAppear(): any {
+  return [
+    query(':enter, :leave', style({ position: 'fixed', width: '100%', height: '100%' }), { optional: true }),
+    group([
+      query(':enter', [
+        style({ opacity: 0, transform: 'scale(0.95)' }),
+        animate(routerAnimationDuration + 'ms ease-in-out', style({ opacity: 1, transform: 'scale(1)' }))
+      ], { optional: true }),
+      query(':leave', [
+        style({ opacity: 1, transform: 'scale(1)' }),
+        animate(routerAnimationDuration + 'ms ease-in-out', style({ opacity: 0, transform: 'scale(0.95)' }))
+      ], { optional: true }),
+    ])
+  ];
+}
+
 export const dashboardTransition = trigger('dashboardTransition', [
   transition(':enter', [
     style({ transform: true ? 'translateX(-100%)' : 'translateX(100%)' }),
@@ -43,7 +75,16 @@ export const pageRouterTransition = trigger('routerTransition', [
   transition('* => rightB', createTransition()),
   transition('* => rightA', createTransition()),
   transition('* => leftA', createTransition(true)),
-  transition('* => leftB', createTransition(true))
+  transition('* => leftB', createTransition(true)),
+  transition('* => in-right-panel', createTransition()),
+  transition('* => on-the-right', createTransition()),
+  transition('* => in-left-panel', createTransition(true)),
+  transition('* => on-the-left', createTransition(true)),
+  transition('* => in-top-panel', createTransitionVertical(true)),
+  transition('* => above', createTransitionVertical(true)),
+  transition('* => in-bottom-panel', createTransitionVertical()),
+  transition('* => below', createTransitionVertical()),
+  transition('* => center', createTransitionAppear())
 ]);
 
 export const footerRouterTransition = trigger('footerRouterTransition', [
